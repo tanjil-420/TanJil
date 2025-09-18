@@ -103,7 +103,7 @@ module.exports = {
 	
 	const permission = global.GoatBot?.config?.DEV || [];
   if (!permission.includes(event.senderID)) {
-    api.sendMessage("You can't use this command because you're not my boss, TanJil 🚫", event.threadID, event.messageID);
+    api.sendMessage("You can't use this command because you're not my boss TanJil ⛔", event.threadID, event.messageID);
     return;
   }
 
