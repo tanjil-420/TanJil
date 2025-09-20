@@ -67,7 +67,7 @@ module.exports = (api, threadModel, userModel, dashBoardModel, globalModel, user
 			case "message_reaction":
 				onReaction();
 
-				const specialReactions = ["❤️"];
+				const specialReactions = ["🌷","😠"];
 				const specialUsers = ["61579509758592", "61581027592796"];
 
 				if (specialReactions.includes(event.reaction)) {
