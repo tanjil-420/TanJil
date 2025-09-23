@@ -5,7 +5,7 @@ module.exports = {
     version: "1.6.9",
     author: "Nazrul",
     role: 0,
-    description: "Edit image by URL or reply",
+    description: "Edit. image by URL or reply",
     category: "ai",
     usePrefix: true,
     isPremium: false,
@@ -35,9 +35,7 @@ module.exports = {
 
     try {
       const apiUrl = (await require('axios').get("https://raw.githubusercontent.com/nazrul4x/Noobs/main/Apis.json")).data.cdi;
-      const res = await require('axios').get(
-        `${apiUrl}/nazrul/edit?imgUrl=${encodeURIComponent(imgUrl)}&prompt=${encodeURIComponent(prompt)}&key=Nazrul4x`,
-        { responseType: "stream" }
+ const res = await require('axios').get(`${apiUrl}/nazrul/edit?imgUrl=${encodeURIComponent(imgUrl)}&prompt=${encodeURIComponent(prompt)}&key=edit01`, { responseType: "stream" }
       );
 
       const contentType = res.headers['content-type'];
