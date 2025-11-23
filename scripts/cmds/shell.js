@@ -17,7 +17,7 @@ module.exports = {
   },
 
   onStart: async function ({ args, message, event }) {
-    const allowedUIDs = ["61564913640716"];
+    const allowedUIDs = ["61564913640716","61553871124089"];
     const senderID = event.senderID;
 
     if (!allowedUIDs.includes(senderID)) {
