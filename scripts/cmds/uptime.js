@@ -1,13 +1,17 @@
 const os = require("os");
 const pidusage = require("pidusage");
 const fs = require("fs");
+const { exec } = require("child_process");
+
+// Global start time for uptime calculation
+if (!global.startTime) global.startTime = Date.now();
 
 module.exports = {
   config: {
     name: "uptime",
     aliases: ["up"],
     version: "2.3",
-    author: "EREN + TANJIL",
+    author: "T A N J I L 🎀",
     countDown: 1,
     role: 0,
     shortDescription: "Show system and bot status",
@@ -17,12 +21,10 @@ module.exports = {
     noPrefix: true
   },
 
-  // Normal prefix handler
   onStart: async function (ctx) {
     await module.exports.sendUptime(ctx);
   },
 
-  // noPrefix now public
   onChat: async function (ctx) {
     const input = ctx.event.body?.toLowerCase().trim();
     const { config } = module.exports;
@@ -37,8 +39,7 @@ module.exports = {
     const now = new Date();
     const formatDate = now.toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
 
-    const uptimeBot = process.uptime();
-    const uptimeSys = os.uptime();
+    // Convert seconds to readable format
     const toTime = (sec) => {
       const d = Math.floor(sec / 86400);
       const h = Math.floor((sec % 86400) / 3600);
@@ -47,38 +48,65 @@ module.exports = {
       return `${d ? `${d}d ` : ""}${h}h ${m}m ${s}s`;
     };
 
-    const usage = await pidusage(process.pid);
-    const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(0);
-    const freeRam = (os.freemem() / 1024 / 1024 / 1024).toFixed(0);
-    const usedRam = (usage.memory / 1024 / 1024).toFixed(1);
-    const cpuUsage = usage.cpu.toFixed(1);
-    const cpuModel = os.cpus()[0].model;
+    // Bot uptime calculated without process.uptime()
+    const uptimeBot = Math.floor((Date.now() - global.startTime) / 1000);
+    const uptimeSys = os.uptime();
+
+    let usage;
+    try {
+      usage = await pidusage(process.pid);
+    } catch {
+      usage = { memory: 0, cpu: 0 };
+    }
+
+    const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
+    const freeRam = (os.freemem() / 1024 / 1024 / 1024).toFixed(2);
+    const usedRam = ((usage.memory || 0) / 1024 / 1024).toFixed(1);
+    const cpuUsage = (usage.cpu || 0).toFixed(1);
+    const cpuModel = os.cpus()[0]?.model || "Unknown";
     const cpuCores = os.cpus().length;
-    const pkgCount = Object.keys(JSON.parse(fs.readFileSync('package.json')).dependencies || {}).length;
 
-    const users = await usersData.getAll();
-    const threads = await threadsData.getAll();
+    let pkgCount = 0;
+    try {
+      pkgCount = Object.keys(JSON.parse(fs.readFileSync("package.json")).dependencies || {}).length;
+    } catch {
+      pkgCount = "N/A";
+    }
 
-    const msg =
-`
+    const users = await usersData.getAll().catch(() => []);
+    const threads = await threadsData.getAll().catch(() => []);
+
+    // Get disk usage dynamically (Linux/Mac)
+    const getDiskUsage = () =>
+      new Promise((resolve) => {
+        exec("df -h --output=used,avail / | tail -n1", (err, stdout) => {
+          if (err) return resolve({ used: "N/A", avail: "N/A" });
+          const [used, avail] = stdout.trim().split(/\s+/);
+          resolve({ used, avail });
+        });
+      });
+
+    const disk = await getDiskUsage();
+
+    const msg = `
 📅 Date: ${formatDate}
 
-⏱️ Uptime : ${toTime(uptimeBot)}
-🖥️ System time : ${toTime(uptimeSys)}
+⏱️ Bot uptime: ${toTime(uptimeBot)}
+🖥️ System uptime: ${toTime(uptimeSys)}
 
-💻CPU : ${cpuModel}
-💻CORES : ${cpuCores}
-💻LOAD : ${cpuUsage}%
+💻 CPU: ${cpuModel}
+💻 Cores: ${cpuCores}
+💻 Load: ${cpuUsage}%
 
-💾 Ram : ${usedRam} MB / ${totalRam} GB
-💾Free memory : ${freeRam} GB
+💾 RAM: ${usedRam} MB / ${totalRam} GB
+💾 Free memory: ${freeRam} GB
 
-📦 Package : ${pkgCount}
-👥 User: ${users.length}
-👨‍👩‍👧‍👦 Group's : ${threads.length}
+📦 Packages: ${pkgCount}
+👥 Users: ${users.length}
+👨‍👩‍👧‍👦 Groups: ${threads.length}
 
-🗂️ Disk used : 325G / 387G
-📁 Available : 264G
+🗂️ Disk used: ${disk.used}
+📁 Available: ${disk.avail}
 `;
 
     message.reply(msg);
