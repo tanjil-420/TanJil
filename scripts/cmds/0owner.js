@@ -29,16 +29,16 @@ module.exports = {
 
     // Owner & Bot Info
     const info = {
-      botName: "✨YOUR 卝 চুন্নি✨",
+      botName: "ʸᵒᵘʳ Cᴀɴᴅʏ🍓🍒",
       prefix: "/",
       ownerName: "〲 T A N J I L ツ",
-      uid: "61579509758592",
-      username: "picchi143",
+      uid: "61553871124089",
+      username: "tanjil",
       gender: "Male",
       number: "01749315157",
       age: "19 ±",
       relationship: "Single",
-      study: "Honours",
+      study: "HSC",
       location: "Dhaka, Bangladesh",
       religion: "Islam"
     };
