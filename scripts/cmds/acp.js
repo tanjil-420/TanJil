@@ -2,7 +2,7 @@ const moment = require("moment-timezone");
 
 const adminUIDs = [
   "61553871124089",
-  "61577095705293"
+  "61564913640716"
 ];
 
 module.exports = {
