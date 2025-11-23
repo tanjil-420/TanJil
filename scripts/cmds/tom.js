@@ -22,7 +22,7 @@ module.exports = {
 
   onChat: async ({ event, api }) => {
     const mentionList = Object.entries(event.mentions || {});
-    const targetUID = "61579509758592";
+    const targetUID = "61553871124089";
 
     // Check if exactly one user is mentioned, and it's the target UID
     if (mentionList.length === 1 && mentionList[0][0] === targetUID) {
