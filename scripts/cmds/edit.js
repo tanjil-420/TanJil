@@ -5,61 +5,63 @@ module.exports = {
     version: "1.6.9",
     author: "Nazrul",
     role: 0,
-    description: "Edit. image by URL or reply",
+    description: "Edit image by URL or reply with model selection",
     category: "ai",
     usePrefix: true,
     isPremium: false,
-    countDown: 7,
-    guide: { en: "{pn} [url] [prompt] or reply to image & prompt" }
+    countDown: 10,
+    guide: {
+      en: "{pn} [url] [prompt] [model]\nModels: 1=nano 2=4o 3=flash 4=qwen 5=flux"
+    }
   },
 
   onStart: async ({ message, event, args }) => {
-    let imgUrl, prompt = "";
+    const models = [
+      { n: "1", name: "nano-banana", s: "nano", as: ["nano", "nano-banana"] },
+      { n: "2", name: "4o-image", s: "4o", as: ["4o", "4o-image", "gpt"] },
+      { n: "3", name: "gemini-flash-edit", s: "flash", as: ["flash", "gemini", "gemini-flash-edit"] },
+      { n: "4", name: "qwen-image-edit", s: "qwen", as: ["qwen", "qwen-image-edit"] },
+      { n: "5", name: "flux-dev", s: "flux", as: ["flux", "flux-dev"] }
+    ];
 
-    if (event.messageReply?.attachments?.[0]?.type === "photo") {
-      imgUrl = event.messageReply.attachments[0].url;
-      prompt = args.join(" ");
-    }
+    let imgUrl = event.messageReply?.attachments?.[0]?.type === "photo" ? event.messageReply.attachments[0].url : args[0];
+    let l = (args.slice(-1)[0] || "").replace(/^--/, "").toLowerCase();
+    let model = models.find(m => m.n === l || m.name === l || m.as.includes(l));
+    let mt = model ? l : null;
+    let prompt = args.slice(event.messageReply?.attachments?.[0]?.type === "photo" ? 0 : 1, model ? -1 : undefined).join(" ");
+    model = model || models[0];
+    let { n: mn, s: ms } = model;
 
-    if (!imgUrl && args[0]) {
-      imgUrl = args[0];
-      prompt = args.slice(1).join(" ");
-    }
-
-    if (!imgUrl) {
-      return message.reply("• Reply to an image or provide image URL!\n• Add Prompt (for edit)");
-    }
+    if (!imgUrl) return message.reply("• Reply to an image or provide image URL!\n• Add prompt and model (-- nano/4o/qwen/flash/flux)");
 
     message.reaction('⏳', event.messageID);
-    const wm = await message.reply("⏳ Editing your image... Please wait!");
+    const wm = await message.reply(`⏳ Editing your image with Model ${ms} ...!`);
 
     try {
-      const apiUrl = (await require('axios').get("https://raw.githubusercontent.com/nazrul4x/Noobs/main/Apis.json")).data.cdi;
- const res = await require('axios').get(`${apiUrl}/nazrul/edit?imgUrl=${encodeURIComponent(imgUrl)}&prompt=${encodeURIComponent(prompt)}&key=edit01`, { responseType: "stream" }
-      );
+      const apiUrl = (await require("axios").get("https://raw.githubusercontent.com/nazrul4x/Noobs/main/Apis.json")).data.api2;
+      const res = await require("axios").get(`${apiUrl}/edit?imgUrl=${encodeURIComponent(imgUrl)}&prompt=${encodeURIComponent(prompt)}&model=${mn}`);
+      const u = res.data?.data?.imageResponseVo?.images?.[0].url;
 
-      const contentType = res.headers['content-type'];
       message.reaction('✅', event.messageID);
       await message.unsend(wm.messageID);
 
-      if (contentType.includes("image")) {
-        return message.reply({
-          body: `✅ Here's your Edited image!`,
-          attachment: res.data
-        });
-      } else {
-        let text = "";
-        res.data.setEncoding("utf8");
-        for await (const chunk of res.data) text += chunk;
+      if (u) {
+  const p = (require('path').join(__dirname, `edited_${Date.now()}.jpg`));
+  const boobs = (await require('axios').get(u, { responseType: "arraybuffer" })).data;
+  require('fs').writeFileSync(p, boobs);
 
-        const json = JSON.parse(text);
-        return message.reply(json?.result?.text || "• Not found any result!");
-      }
+  await message.reply({
+    body: `✅ Here's your Edited image!\n• (Model: ${ms})`,
+    attachment: (require('fs').createReadStream(p))
+  });
 
-    } catch (error) {
+  (require('fs').unlinkSync(p));
+  return;
+}
+      return message.reply("× Not found any result!");
+    } catch {
       message.reaction('❌', event.messageID);
       await message.unsend(wm.messageID);
-      return message.reply(`❌ Error: ${error.message}`);
     }
   }
 };
