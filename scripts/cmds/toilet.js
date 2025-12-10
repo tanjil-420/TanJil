@@ -7,31 +7,39 @@ module.exports = {
     name: "toilet",
     aliases: ["tl"],
     version: "1.0",
-    author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
+    author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎( modified by TanJil )",
     countDown: 5,
     role: 0,
     shortDescription: "face on toilet",
     longDescription: "",
-    category: "fun",
-    guide: "{pn} [mention someone or reply a message]",
+    category: "funny",
+    guide: "{pn} @mention | {pn} <uid> | {pn} <reply>",
   },
 
-  onStart: async function ({ message, event }) {
-    const uid1 = Object.keys(event.mentions)[0];
-    const uid2 = event.messageReply ? event.messageReply.senderID : null; 
-    const replyUser = uid1 || uid2;
+  onStart: async function ({ message, event, args }) {
+    let target;
 
+    const mention = Object.keys(event.mentions);
 
-    if (!replyUser) {
-      return message.reply("Please mention someone or reply to a message.");
+    if (mention.length > 0) {
+      // Case 1: @mention
+      target = mention[0];
+    } else if (args[0] && !isNaN(args[0])) {
+      // Case 2: UID
+      target = args[0];
+    } else if (event.messageReply) {
+      // Case 3: Reply
+      target = event.messageReply.senderID;
     }
 
-    // মালিকের আইডি চেক
-    if (replyUser === "100068909067279") {
+    if (!target) return message.reply("Please mention someone, provide UID, or reply to a message.");
+
+    // 
+    if (target === "100068909067279") {
       return message.reply("You deserve this, not my owner! 😙");
     }
 
-    bal(replyUser).then(ptth => {
+    bal(target).then(ptth => {
       if (ptth) {
         message.reply({
           body: "You Deserve This Place 🙂✌️",
@@ -52,7 +60,7 @@ async function bal(userID) {
     let img = await jimp.read("https://i.imgur.com/sZW2vlz.png");
     img.resize(1080, 1350);
 
-    // ছবির অবস্থান নির্ধারণ
+    //
     img.composite(avatar, 310, 670);
 
     let pth = "toilet.png";
@@ -63,4 +71,4 @@ async function bal(userID) {
     console.error("Error processing image:", error);
     return null;
   }
-     }
+}
