@@ -7,22 +7,35 @@ module.exports = {
   config: {
     name: "propose",
     aliases: ["propose"],
-    version: "1.0",
-    author: "Efat + Tanjil ",
+    version: "1.1",
+    author: "Efat (modified by TanJil)",
     countDown: 5,
     role: 0,
     shortDescription: "Propose with custom image",
     longDescription: "Generate a propose image with the mentioned user using a custom background.",
     category: "funny",
-    guide: "{pn} @mention"
+    guide: "{pn} @mention | {pn} <uid> | {pn} <reply>"
   },
 
-  onStart: async function ({ api, message, event, usersData }) {
-    const mention = Object.keys(event.mentions);
-    if (mention.length === 0) return message.reply("Please mention someone to propose.");
-
+  onStart: async function ({ api, message, event, usersData, args }) {
     let senderID = event.senderID;
-    let mentionedID = mention[0];
+    let mentionedID;
+
+    // --- Mention check
+    const mention = Object.keys(event.mentions);
+    if (mention.length > 0) {
+      mentionedID = mention[0];
+    }
+    // --- Reply check
+    else if (event.messageReply) {
+      mentionedID = event.messageReply.senderID;
+    }
+    // --- UID check
+    else if (args && args[0]) {
+      mentionedID = args[0].replace(/[^0-9]/g, "");
+    }
+
+    if (!mentionedID) return message.reply("Please mention/tag/reply/UID someone to propose.");
 
     try {
       // Get avatar URLs
@@ -78,7 +91,7 @@ module.exports = {
       fs.writeFileSync(imgPath, canvas.toBuffer("image/png"));
 
       message.reply({
-        body: "Will you marry me?",
+        body: "💍 Will you marry me?",
         attachment: fs.createReadStream(imgPath)
       }, () => fs.unlinkSync(imgPath));
 
