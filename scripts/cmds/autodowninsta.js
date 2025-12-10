@@ -6,7 +6,7 @@ module.exports = {
 	threadStates: {},
 
 	config: {
-		name: 'autoinsta',
+		name: 'autodowninsta',
 		version: '1.0',
 		author: 'Kshitiz',
 		countDown: 5,
