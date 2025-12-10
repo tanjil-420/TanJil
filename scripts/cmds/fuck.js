@@ -8,21 +8,34 @@ module.exports = {
     name: "fuck",
     aliases: ["fk"],
     version: "1.0",
-    author: "Efat",
+    author: "Efat ( modified by TanJil )",
     countDown: 5,
     role: 2,
     shortDescription: "FK with custom image",
     longDescription: "Generate a fk image with the mentioned user using a custom background. Male on right, female on left.",
     category: "funny",
-    guide: "{pn} @mention"
+    guide: "{pn} @mention | {pn} <uid> | {pn} <reply>"
   },
 
-  onStart: async function ({ api, message, event, usersData }) {
+  onStart: async function ({ api, message, event, usersData, args }) {
+    let target;
     const mention = Object.keys(event.mentions);
-    if (mention.length === 0) return message.reply("Please mention someone to FK.");
 
-    let senderID = event.senderID;
-    let mentionedID = mention[0];
+    if (mention.length > 0) {
+      // Case 1: @mention
+      target = mention[0];
+    } else if (args[0] && !isNaN(args[0])) {
+      // Case 2: UID
+      target = args[0];
+    } else if (event.messageReply) {
+      // Case 3: Reply
+      target = event.messageReply.senderID;
+    }
+
+    if (!target) return message.reply("Please mention someone, give UID, or reply to their message.");
+
+    const senderID = event.senderID;
+    const mentionedID = target;
 
     try {
       // Detect gender (fallback to male/female)
