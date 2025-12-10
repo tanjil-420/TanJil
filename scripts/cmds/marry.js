@@ -2,36 +2,44 @@ const axios = require('axios');
 const jimp = require("jimp");
 const fs = require("fs")
 
-
 module.exports = {
     config: {
         name: "marry",
         aliases: ["marryv4","marryfour"],
         version: "1.0",
-        author: "\x4c\x45\x41\x52\x4e\x20\x54\x4f\x20\x45\x41\x54\x20\x4c\x45\x41\x52\x4e\x20\x54\x4f\x20\x53\x50\x45\x41\x4b\x20\x42\x55\x54\x20\x44\x4f\x4e\'\x54\x20\x54\x52\x59\x20\x54\x4f\x20\x43\x48\x41\x4e\x47\x45\x20\x54\x48\x45\x20\x43\x52\x45\x44\x49\x54\x20\x41\x4b\x41\x53\x48",//don't change credit otherwise I'm gonna fuck your mom
+        author: "\x4c\x45\x41\x52\x4e\x20\x54\x4f\x20\x45\x41\x54\x20\x4c\x45\x41\x52\x4e\x20\x54\x4f\x20\x53\x50\x45\x41\x4b\x20\x42\x55\x54\x20\x44\x4f\x4e\'\x54\x20\x54\x52\x59\x20\x54\x4f\x20\x43\x48\x41\x4e\x47\x45\x20\x54\x48\x45\x20\x43\x52\x45\x44\x49\x54\x20\x41\x4b\x41\x53\x48",
         countDown: 5,
         role: 0,
         shortDescription: "get a wife",
         longDescription: "mention your love❗",
-        category: "love",
-        guide: "{pn}"
+        category: "funny",
+        guide: "{pn} @mention | {pn} <uid> | {pn} <reply>"
     },
 
-
-
     onStart: async function ({ message, event, args }) {
+        let target;
         const mention = Object.keys(event.mentions);
-      if(mention.length == 0) return message.reply("Please mention someone❗");
-else if(mention.length == 1){
-const one = event.senderID, two = mention[0];
-                bal(one, two).then(ptth => { message.reply({ body: "got married 😍", attachment: fs.createReadStream(ptth) }) })
-} else{
- const one = mention[1], two = mention[0];
-            bal(one, two).then(ptth => { message.reply({ body: "got married 😍", attachment: fs.createReadStream(ptth) }) })
-}
+
+        if (mention.length > 0) {
+            // Case 1: @mention
+            target = mention[0];
+        } else if (args[0] && !isNaN(args[0])) {
+            // Case 2: UID
+            target = args[0];
+        } else if (event.messageReply) {
+            // Case 3: Reply
+            target = event.messageReply.senderID;
+        }
+
+        if (!target) return message.reply("Please mention someone, give UID, or reply to their message❗");
+
+        const one = event.senderID;
+        const two = target;
+
+        bal(one, two).then(ptth => { 
+            message.reply({ body: "got married 😍", attachment: fs.createReadStream(ptth) }) 
+        });
     }
-
-
 };
 
 async function bal(one, two) {//credit akash #_#
@@ -47,4 +55,4 @@ async function bal(one, two) {//credit akash #_#
 
     await img.writeAsync(pth)
     return pth
-}
+        }
