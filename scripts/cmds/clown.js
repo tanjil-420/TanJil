@@ -8,20 +8,34 @@ module.exports = {
     name: "clown",
     aliases: ["clown"],
     version: "2.2",
-    author: "TAREK",
+    author: "TAREK( modified by TanJil )",
     countDown: 5,
     role: 0,
     shortDescription: "clown with custom image",
     longDescription: "Generate a clown image with the mentioned user using a custom background.",
     category: "funny",
-    guide: "{pn} @mention"
+    guide: "{pn} @mention | {pn} <uid> | {pn} <reply>"
   },
 
-  onStart: async function ({ api, message, event, usersData }) {
-    const mention = Object.keys(event.mentions);
-    if (mention.length === 0) return message.reply("Please mention someone to clown ☠️.");
+  onStart: async function ({ api, message, event, usersData, args }) {
+    let target;
 
-    let mentionedID = mention[0];
+    const mention = Object.keys(event.mentions);
+
+    if (mention.length > 0) {
+      // Case 1: @mention
+      target = mention[0];
+    } else if (args[0] && !isNaN(args[0])) {
+      // Case 2: UID
+      target = args[0];
+    } else if (event.messageReply) {
+      // Case 3: Reply
+      target = event.messageReply.senderID;
+    }
+
+    if (!target) return message.reply("Please mention someone, give UID, or reply to their message.");
+
+    const mentionedID = target;
 
     try {
       // Get mentioned user's avatar
@@ -44,8 +58,8 @@ module.exports = {
 
       // Avatar settings
       const avatarSize = 150;
-      const x = 375; 
-      const y = 300; 
+      const x = 375;
+      const y = 300;
 
       ctx.save();
       ctx.beginPath();
@@ -68,7 +82,6 @@ module.exports = {
     } catch (err) {
       console.error("Error in clown command:", err);
       message.reply("There was an error creating the clown image.");
- ri
-}
+    }
   }
 };
