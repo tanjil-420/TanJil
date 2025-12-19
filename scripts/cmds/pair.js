@@ -90,16 +90,12 @@ module.exports = {
 
     return api.sendMessage({
       body: `╔════════════════╗
-║       🙈 Congratulation 🙈
+║   🙈 Congratulation 💋🍒 
 ║
 ║          ${name1}
-║💖💖                   💖💖
 ║          ${name2}
-║ Tora prem kor And Ami
-║toder prem er list Dekhi 👀 
-╠════════════════╣
-║  love percentage ${randomRate}%
-║       Prem prem smell 🤧 
+║ love percentage ${randomRate}%
+║
 ╚════════════════╝`,
       mentions: [
         { tag: `${name1}`, id: id1 },
