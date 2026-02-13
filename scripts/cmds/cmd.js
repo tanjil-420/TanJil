@@ -101,7 +101,7 @@ module.exports = {
 
 	onStart: async ({ args, message, api, threadModel, userModel, dashBoardModel, globalModel, threadsData, usersData, dashBoardData, globalData, event, commandName, getLang }) => {
 	
-	const permission = global.GoatBot?.config?.DEV || [];
+	const permission = global.GoatBot?.config?.developer || [];
   if (!permission.includes(event.senderID)) {
     api.sendMessage("You can't use this command because you're not my boss TanJil ⛔", event.threadID, event.messageID);
     return;
