@@ -4,7 +4,7 @@
   "description": "A simple Bot chat messenger using personal account. Made by NTKhang.",
   "main": "index.js",
   "engines": {
-    "node": "16.x",
+    "node": "18.x",
     "npm": ">=7.0.0"
   },
   "dependencies": {
@@ -12,7 +12,6 @@
     "axios": "^1.4.0",
     "ws3-fca": "^1.0.47",
     "bcrypt": "^5.0.1",
-    "canvas": "^2.9.1",
     "cheerio": "^1.0.0-rc.12",
     "child_process": "^1.0.2",
     "connect-flash": "^0.1.1",
@@ -52,6 +51,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node index.js",
+    "test": "echo \"Error: no test specified\" && exit 0",
     "dev": "NODE_ENV=development node index.js",
     "prod": "NODE_ENV=production node index.js"
   },
