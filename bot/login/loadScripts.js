@@ -40,8 +40,8 @@ module.exports = async function (api, threadModel, userModel, dashBoardModel, gl
 
 	for (const folderModules of folders) {
 		const makeColor = folderModules == "cmds" ?
-			createLine("RAAD LOAD COMMANDS") :
-			createLine("RAAD LOAD COMMANDS EVENT");
+			createLine("LOAD COMMANDS") :
+			createLine("LOAD COMMANDS EVENT");
 		console.log(colors.hex("#f5ab00")(makeColor));
 
 		if (folderModules == "cmds") {
@@ -90,7 +90,7 @@ module.exports = async function (api, threadModel, userModel, dashBoardModel, gl
 							if (!existsSync(`${process.cwd()}/node_modules/${packageName}`)) {
 								const wating = setInterval(() => {
 									// loading.info('PACKAGE', `${spinner[count % spinner.length]} Installing package ${packageName} for ${text} ${file}`);
-									loading.info('PACKAGE', `${spinner[count % spinner.length]}RAAD Installing package ${colors.yellow(packageName)} for ${text} ${colors.yellow(file)}`);
+									loading.info('PACKAGE', `${spinner[count % spinner.length]} Installing package ${colors.yellow(packageName)} for ${text} ${colors.yellow(file)}`);
 									count++;
 								}, 80);
 								try {
@@ -151,7 +151,7 @@ module.exports = async function (api, threadModel, userModel, dashBoardModel, gl
 				}
 				// ——————————————— CHECK ENV GLOBAL ——————————————— //
 				if (envGlobal) {
-					if (typeof envGlobal != "RAAD object" || typeof envGlobal == "object" && Array.isArray(envGlobal))
+					if (typeof envGlobal != "object" || typeof envGlobal == "object" && Array.isArray(envGlobal))
 						throw new Error("the value of \"envGlobal\" must be object");
 					for (const i in envGlobal) {
 						if (!configCommands.envGlobal[i]) {
@@ -215,11 +215,11 @@ module.exports = async function (api, threadModel, userModel, dashBoardModel, gl
 					error
 				});
 			}
-			loading.info('RAAD LOADED', `${colors.green(`${commandLoadSuccess}`)}${commandError.length ? `, ${colors.red(`${commandError.length}`)}` : ''}`);
+			loading.info('LOADED', `${colors.green(`${commandLoadSuccess}`)}${commandError.length ? `, ${colors.red(`${commandError.length}`)}` : ''}`);
 		}
 		console.log("\r");
 		if (commandError.length > 0) {
-			log.err("RAAD LOADED", getText('loadScripts', 'loadScriptsError', colors.yellow(text)));
+			log.err("LOADED", getText('loadScripts', 'loadScriptsError', colors.yellow(text)));
 			for (const item of commandError)
 				console.log(` ${colors.red('✖ ' + item.name)}: ${item.error.message}\n`, item.error);
 		}

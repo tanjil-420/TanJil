@@ -1,5 +1,5 @@
 // set bash title
-process.stdout.write("\x1b]2;GoatBoT V2 - Made by NTKhang fixed By Eren\x1b\x5c");
+process.stdout.write("\x1b]2;Hinata Bot V3\x1b\x5c");
 const defaultRequire = require;
 
 function decode(text) {
@@ -15,8 +15,7 @@ const path = defaultRequire("path");
 const readline = defaultRequire("readline");
 const fs = defaultRequire("fs-extra");
 const toptp = defaultRequire("totp-generator");
-//const login = defaultRequire(`${process.cwd()}/fb-chat-api`);
-const login = defaultRequire("ws3-fca");
+const login = defaultRequire("mahmud-fca");
 const qr = new (defaultRequire("qrcode-reader"));
 const Canvas = defaultRequire("canvas");
 const https = defaultRequire("https");
@@ -81,7 +80,7 @@ const titles = [
 		"G O A T B O T  V 2 @" + currentVersion
 	],
 	[
-		"GOATBOT V2"
+		""
 	]
 ];
 const maxWidth = process.stdout.columns;
@@ -99,7 +98,7 @@ for (const text of title) {
 	const textColor = gradient("#FA8BFF", "#2BD2FF", "#2BFF88")(text);
 	centerText(textColor, text.length);
 }
-let subTitle = `BaYjid BoT V2@${currentVersion}- A simple Bot chat messenger use personal account`;
+let subTitle = `• Version @${currentVersion}`;
 const subTitleArray = [];
 if (subTitle.length > maxWidth) {
 	while (subTitle.length > maxWidth) {
@@ -113,14 +112,14 @@ if (subTitle.length > maxWidth) {
 else {
 	subTitleArray.push(subTitle);
 }
-const author = ("Created by NTKhang × BaYjid♡");
-const srcUrl = ("Source code: https://github.com/ntkhang03/Goat-Bot-V2");
+const modified = ("• Modified & Fca fix by MahMUD");
+const srcUrl = ("• Source code: https://github.com/mahmudx7/Hinata-Bot-v3");
 const fakeRelease = ("ALL VERSIONS NOT RELEASED HERE ARE FAKE");
 for (const t of subTitleArray) {
 	const textColor2 = gradient("#9F98E8", "#AFF6CF")(t);
 	centerText(textColor2, t.length);
 }
-centerText(gradient("#9F98E8", "#AFF6CF")(author), author.length);
+centerText(gradient("#9F98E8", "#AFF6CF")(modified), modified.length);
 centerText(gradient("#9F98E8", "#AFF6CF")(srcUrl), srcUrl.length);
 centerText(gradient("#f5af19", "#f12711")(fakeRelease), fakeRelease.length);
 
