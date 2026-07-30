@@ -1,3 +1,394 @@
+​📦 Version 1.6.00
+​⬆️ What's Changed
+​ads.js: new cmd: ads
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.99
+​⬆️ What's Changed
+​acp.js: new cmd: acp
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.98
+​⬆️ What's Changed
+​actor.js: new cmd: actor
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.97
+​⬆️ What's Changed
+​bestie.js: new cmd: bestie
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.96
+​⬆️ What's Changed
+​flux.js: new cmd: flux
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.95
+​⬆️ What's Changed
+​fluxpro.js: new cmd: fluxpro
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.94
+​⬆️ What's Changed
+​fork.js: new cmd: fork
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.93
+​⬆️ What's Changed
+​footballquiz.js: new cmd: footballquiz
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.92
+​⬆️ What's Changed
+​fyp.js: new cmd: fyp
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.91
+​⬆️ What's Changed
+​gay.js: new cmd: gay
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.90
+​⬆️ What's Changed
+​hack.js: new cmd: hack
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.89
+​⬆️ What's Changed
+​hadis.js: new cmd: hadis
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.88
+​⬆️ What's Changed
+​my.js: new cmd: my
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.87
+​⬆️ What's Changed
+​meme.js: new cmd: meme
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.86
+​⬆️ What's Changed
+​mathgame.js: new cmd: mathgame
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.85
+​⬆️ What's Changed
+​pin.js: new cmd: pin
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.84
+​⬆️ What's Changed
+​play.js: new cmd: play
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.83
+​⬆️ What's Changed
+​prompt.js: new cmd: prompt
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.82
+​⬆️ What's Changed
+​rmbg.js: new cmd: rmbg
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.81
+​⬆️ What's Changed
+​Say.js: new cmd: Say
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.80
+​⬆️ What's Changed
+​ytb.js: fix ytb cmd
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.79
+​⬆️ What's Changed
+​sing.js: update new version sing cmd
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.78
+​⬆️ What's Changed
+​Baby.js: update simi chat cmd
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.77
+​⬆️ What's Changed
+​spy.js: new cmd: spy
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.76
+​⬆️ What's Changed
+​tokai.js: new cmd: tokai
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.75
+​⬆️ What's Changed
+​spamkick.js: new cmd: spamkick
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.74
+​⬆️ What's Changed
+​video.js: new cmd: video
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.73
+​⬆️ What's Changed
+​trigger.js: new cmd: trigger
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.72
+​⬆️ What's Changed
+​propose.js: new cmd: propose
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.71
+​⬆️ What's Changed
+​write.js: new cmd: write
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.70
+​⬆️ What's Changed
+​murgi.js: new cmd: murgi
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.69
+​⬆️ What's Changed
+​joke.js: new cmd: joke
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.68
+​⬆️ What's Changed
+​imgur.js: new cmd: imgur
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.67
+​⬆️ What's Changed
+​ifter.js: new cmd: ifter
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.66
+​⬆️ What's Changed
+​ffvideo.js: new cmd: ffvideo
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.65
+​⬆️ What's Changed
+​edit.js: new cmd: edit
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.64
+​⬆️ What's Changed
+​car.js: new cmd: car
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.63
+​⬆️ What's Changed
+​blur.js: new cmd: blur
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.62
+​⬆️ What's Changed
+​bike.js: new cmd: bike
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.61
+​⬆️ What's Changed
+​ss.js: new cmd: ss
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.60
+​⬆️ What's Changed
+​song.js: new cmd: song
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.59
+​⬆️ What's Changed
+​toilet.js: new cmd: toilet
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.58
+​⬆️ What's Changed
+​tord.js: new cmd: tord
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.57
+​⬆️ What's Changed
+​unsplash.js: new cmd: unsplash
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.56
+​⬆️ What's Changed
+​videos.js: new cmd: videos
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.55
+​⬆️ What's Changed
+​ytb.js: new cmd: ytb
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.54
+​⬆️ What's Changed
+​onepiece.js: new cmd: onepiece
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.53
+​⬆️ What's Changed
+​joker.js: new cmd: joker
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.52
+​⬆️ What's Changed
+​imggbb.js: new cmd: imggbb
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.51
+​⬆️ What's Changed
+​inbox.js: new cmd: inbox
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.50
+​⬆️ What's Changed
+​flux.js: new cmd: flux
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.49
+​⬆️ What's Changed
+​fakechat.js: new cmd: fakechat
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.48
+​⬆️ What's Changed
+​cdp.js: new cmd: cdp
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.47
+​⬆️ What's Changed
+​buttslap.js: new cmd: buttslap
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.46
+​⬆️ What's Changed
+​birthday.js: new cmd: birthday
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.45
+​⬆️ What's Changed
+​baby.js: new cmd: baby
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.44
+​⬆️ What's Changed
+​affect.js: new cmd: affect
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.43
+​⬆️ What's Changed
+​album.js: new cmd: album
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.42
+​⬆️ What's Changed
+​horny.js: new cmd: horny
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.41
+​⬆️ What's Changed
+​ffqz.js: new cmd: ffqz
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.40
+​⬆️ What's Changed
+​cartoon.js: new cmd: cartoon
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.39
+​⬆️ What's Changed
+​quiz.js: new cmd: quiz
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.38
+​⬆️ What's Changed
+​anisr.js: new cmd: anisr
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+📦 Version 1.5.37
+​⬆️ What's Changed
+​fun.js: new cmd: fun
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+
+​📦 Version 1.5.36
+​⬆️ What's Changed
+​flag.js: new cmd: flag game
+​Contributors
+​<div style="display: flex; align-items: center;"><a href="https://github.com/mahmudx7">mahmudx7&nbsp;&nbsp;</a> <img src="https://github.com/mahmudx7.png" width="20" height="20" style="border-radius:50%;" alt="mahmudx7"></div>
+​
+
 ## 📦 Version 1.5.35
 ### ⬆️ What's Changed
 - **fb-chat-api/index.js**: fix: fca not working

@@ -4,8 +4,10 @@
 		pkgs.nodePackages.typescript-language-server
 		pkgs.libuuid
 		pkgs.replitPackages.jest
+		pkgs.unzip
 	];
+
 	env = {
-		LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [pkgs.libuuid];
+		LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.libuuid ];
 	};
 }

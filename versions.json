@@ -2493,6 +2493,472 @@
 		"files": {
 			"fb-chat-api/index.js": "fix: fca not working",
 			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+			"fb-chat-api/src/listenMqtt.js": "fix: fca not working"
+			}
+	},
+	{
+		"version": "1.5.35",
+		"files": {
+			"fb-chat-api/index.js": "fix: fca not working",
+}
+	},
+	{
+		"version": "1.5.36",
+		"files": {
+			"flag.js": "new cmd: flag game"
+}
+	},
+	{
+		"version": "1.5.37",
+		"files": {
+			"fun.js": "new cmd: fun"
+}
+	},
+{
+		"version": "1.5.38",
+		"files": {
+			"anisr.js": "new cmd: anisr"
+		}
+	},
+	{
+		"version": "1.5.39",
+		"files": {
+			"quiz.js": "new cmd: quiz"
+		}
+	},
+	{
+		"version": "1.5.40",
+		"files": {
+			"cartoon.js": "new cmd: cartoon"
+		}
+	},
+	{
+		"version": "1.5.41",
+		"files": {
+			"ffqz.js": "new cmd: ffqz"
+		}
+	},
+	{
+		"version": "1.5.42",
+		"files": {
+			"horny.js": "new cmd: horny"
+		}
+	},
+	{
+		"version": "1.5.43",
+		"files": {
+			"album.js": "new cmd: album"
+		}
+	},
+	{
+		"version": "1.5.44",
+		"files": {
+			"affect.js": "new cmd: affect"
+		}
+	},
+	{
+		"version": "1.5.45",
+		"files": {
+			"baby.js": "new cmd: baby"
+		}
+	},
+	{
+		"version": "1.5.46",
+		"files": {
+			"birthday.js": "new cmd: birthday"
+		}
+	},
+	{
+		"version": "1.5.47",
+		"files": {
+			"buttslap.js": "new cmd: buttslap"
+		}
+	},
+	{
+		"version": "1.5.48",
+		"files": {
+			"cdp.js": "new cmd: cdp"
+		}
+	},
+	{
+		"version": "1.5.49",
+		"files": {
+			"fakechat.js": "new cmd: fakechat"
+		}
+	},
+	{
+		"version": "1.5.50",
+		"files": {
+			"flux.js": "new cmd: flux"
+		}
+	},
+	{
+		"version": "1.5.51",
+		"files": {
+			"inbox.js": "new cmd: inbox"
+		}
+	},
+	{
+		"version": "1.5.52",
+		"files": {
+			"imggbb.js": "new cmd: imggbb"
+		}
+	},
+	{
+		"version": "1.5.53",
+		"files": {
+			"joker.js": "new cmd: joker"
+		}
+	},
+	{
+		"version": "1.5.54",
+		"files": {
+			"onepiece.js": "new cmd: onepiece"
+		}
+	},
+	{
+		"version": "1.5.55",
+		"files": {
+			"ytb.js": "new cmd: ytb"
+		}
+	},
+	{
+		"version": "1.5.56",
+		"files": {
+			"videos.js": "new cmd: videos"
+		}
+	},
+	{
+		"version": "1.5.57",
+		"files": {
+			"unsplash.js": "new cmd: unsplash"
+		}
+	},
+	{
+		"version": "1.5.58",
+		"files": {
+			"tord.js": "new cmd: tord"
+		}
+	},
+	{
+		"version": "1.5.59",
+		"files": {
+			"toilet.js": "new cmd: toilet"
+		}
+	},
+	{
+		"version": "1.5.60",
+		"files": {
+			"song.js": "new cmd: song"
+		}
+	},
+	{
+		"version": "1.5.61",
+		"files": {
+			"ss.js": "new cmd: ss"
+		}
+	},
+	{
+		"version": "1.5.62",
+		"files": {
+			"bike.js": "new cmd: bike"
+		}
+	},
+	{
+		"version": "1.5.63",
+		"files": {
+			"blur.js": "new cmd: blur"
+		}
+	},
+	{
+		"version": "1.5.64",
+		"files": {
+			"car.js": "new cmd: car"
+		}
+	},
+	{
+		"version": "1.5.65",
+		"files": {
+			"edit.js": "new cmd: edit"
+		}
+	},
+	{
+		"version": "1.5.66",
+		"files": {
+			"ffvideo.js": "new cmd: ffvideo"
+		}
+	},
+	{
+		"version": "1.5.67",
+		"files": {
+			"ifter.js": "new cmd: ifter"
+		}
+	},
+	{
+		"version": "1.5.68",
+		"files": {
+			"imgur.js": "new cmd: imgur"
+		}
+	},
+	{
+		"version": "1.5.69",
+		"files": {
+			"joke.js": "new cmd: joke"
+		}
+	},
+	{
+		"version": "1.5.70",
+		"files": {
+			"murgi.js": "new cmd: murgi"
+		}
+	},
+	{
+		"version": "1.5.71",
+		"files": {
+			"write.js": "new cmd: write"
+		}
+	},
+	{
+		"version": "1.5.72",
+		"files": {
+			"propose.js": "new cmd: propose"
+		}
+	},
+	{
+		"version": "1.5.73",
+		"files": {
+			"trigger.js": "new cmd: trigger"
+		}
+	},
+	{
+		"version": "1.5.74",
+		"files": {
+			"video.js": "new cmd: video"
+		}
+	},
+	{
+		"version": "1.5.75",
+		"files": {
+			"spamkick.js": "new cmd: spamkick"
+		}
+	},
+	{
+		"version": "1.5.76",
+		"files": {
+			"tokai.js": "new cmd: tokai"
+		}
+	},
+	{
+		"version": "1.5.77",
+		"files": {
+			"spy.js": "new cmd: spy"
+		}
+	},
+	{
+		"version": "1.5.78",
+		"files": {
+			"Baby.js": "update simi chat cmd"
+		}
+	},
+	{
+		"version": "1.5.79",
+		"files": {
+			"sing.js": "update new version sing cmd"
+		}
+	},
+	{
+		"version": "1.5.80",
+		"files": {
+			"ytb.js": "fix ytb cmd"
+		}
+	},
+	{
+		"version": "1.5.81",
+		"files": {
+			"Say.js": "new cmd: Say"
+		}
+	},
+	{
+		"version": "1.5.82",
+		"files": {
+			"rmbg.js": "new cmd: rmbg"
+		}
+	},
+	{
+		"version": "1.5.83",
+		"files": {
+			"prompt.js": "new cmd: prompt"
+		}
+	},
+	{
+		"version": "1.5.84",
+		"files": {
+			"play.js": "new cmd: play"
+		}
+	},
+	{
+		"version": "1.5.85",
+		"files": {
+			"pin.js": "new cmd: pin"
+		}
+	},
+	{
+		"version": "1.5.86",
+		"files": {
+			"mathgame.js": "new cmd: mathgame"
+		}
+	},
+	{
+		"version": "1.5.87",
+		"files": {
+			"meme.js": "new cmd: meme"
+		}
+	},
+	{
+		"version": "1.5.88",
+		"files": {
+			"my.js": "new cmd: my"
+		}
+	},
+	{
+		"version": "1.5.89",
+		"files": {
+			"hadis.js": "new cmd: hadis"
+		}
+	},
+	{
+		"version": "1.5.90",
+		"files": {
+			"hack.js": "new cmd: hack"
+		}
+	},
+	{
+		"version": "1.5.91",
+		"files": {
+			"gay.js": "new cmd: gay"
+		}
+	},
+	{
+		"version": "1.5.92",
+		"files": {
+			"fyp.js": "new cmd: fyp"
+		}
+	},
+	{
+		"version": "1.5.93",
+		"files": {
+			"footballquiz.js": "new cmd: footballquiz"
+		}
+	},
+	{
+		"version": "1.5.94",
+		"files": {
+			"fork.js": "new cmd: fork"
+		}
+	},
+	{
+		"version": "1.5.95",
+		"files": {
+			"fluxpro.js": "new cmd: fluxpro"
+		}
+	},
+	{
+		"version": "1.5.96",
+		"files": {
+			"flux.js": "new cmd: flux"
+		}
+	},
+	{
+		"version": "1.5.97",
+		"files": {
+			"bestie.js": "new cmd: bestie"
+		}
+	},
+	{
+		"version": "1.5.98",
+		"files": {
+			"actor.js": "new cmd: actor"
+		}
+	},
+	{
+		"version": "1.5.99",
+		"files": {
+			"acp.js": "new cmd: acp"
+		}
+	},
+	{
+		"version": "1.6.00",
+		"files": {
+			"ads.js": "new cmd: ads"
 		}
 	}
 ]
