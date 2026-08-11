@@ -6,10 +6,6 @@
   },
   "envCommands": {
     "daily": {
-      "rewardDay1": {
-        "coin": 100,
-        "exp": 10
-      },
       "rewardFirstDay": {
         "coin": 100,
         "exp": 10
@@ -29,11 +25,24 @@
     },
     "dhbc": {
       "reward": 1000
+    },
+    "antiout": {
+      "deltaNext": 5
+    },
+    "botnick": {
+      "delayPerGroup": 250
+    },
+    "info": {},
+    "notification2": {
+      "delayPerGroup": 250
     }
   },
   "envEvents": {
     "logsbot": {
       "allow": true
     }
-  }
+  },
+  "commandUnload": [
+    "bot2.js"
+  ]
 }
