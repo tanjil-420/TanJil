@@ -7,7 +7,7 @@ const userModel = new Schema({
 		unique: true
 	},
 	name: String,
-	gender: Number,
+	gender: String,
 	vanity: String,
 	exp: {
 		type: Number,
@@ -15,7 +15,25 @@ const userModel = new Schema({
 	},
 	money: {
 		type: Number,
-		default: 0
+		default: 1000
+	},
+	premium: {
+		type: Object,
+		default: () => ({
+			isPremium: false
+		})
+	},
+	vip: {
+		type: Object,
+		default: () => ({
+			isVip: false
+		})
+	},
+	admin: {
+		type: Object,
+		default: () => ({
+			isAdmin: false
+		})
 	},
 	banned: {
 		type: Object,
@@ -26,6 +44,10 @@ const userModel = new Schema({
 		default: {}
 	},
 	data: {
+		type: Object,
+		default: {}
+	},
+	othersInfo: {
 		type: Object,
 		default: {}
 	}
