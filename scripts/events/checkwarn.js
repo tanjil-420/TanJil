@@ -13,7 +13,7 @@ module.exports = {
 		},
 		en: {
 			warn: "Member %1 has been warned 3 times before and has been banned from the chat box\n- Name: %1\n- Uid: %2\n- To unban, please use the \"%3warn unban <uid>\" command (with uid is the uid of the person you want to unban)",
-			needPermission: "বাজান এডমিন দাও আগে তার পর লাথি দিবো..!?👽🫶"
+			needPermission: "Bot needs administrator permission to kick banned members"
 		}
 	},
 

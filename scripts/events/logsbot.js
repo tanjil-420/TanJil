@@ -14,51 +14,53 @@ module.exports = {
 
 	langs: {
 		vi: {
-			title: "====== Nhật ký bot ======",
-			added: "\n✅\nSự kiện: bot được thêm vào nhóm mới\n- Người thêm: %1",
-			kicked: "\n❌\nSự kiện: bot bị kick\n- Người kick: %1",
-			footer: "\n- User ID: %1\n- Nhóm: %2\n- ID nhóm: %3\n- Thời gian: %4"
+			title: "📘 [ BOT LOGS ]",
+			added: "\n✅ Bot đã được thêm vào một nhóm mới\n➤ Người thêm: %1",
+			kicked: "\n❌ Bot đã bị xóa khỏi nhóm\n➤ Người kick: %1",
+			footer: "\n\n➤ User ID: %1\n➤ Tên nhóm: %2\n➤ Nhóm ID: %3\n➤ Thời gian: %4"
 		},
 		en: {
-			title: "_ Gc Connected ✅ _",
-			added: "\n\nEvent: bot has been added to a new group\n- Added by: %1",
-			kicked: "\n❌\nEvent: bot has been kicked\n- Kicked by: %1",
-			footer: "\n- User ID: %1\n- Group: %2\n- Group ID: %3\n- Time: %4"
+			title: "⚡ Bot Group Status ",
+			added: "\n✅ Bot has been added to a new group\n╰‣ Added by: %1",
+			kicked: "\n❌ Bot has been removed from a group\n╰‣ Kicked by: %1",
+			footer: "\n\n╰‣ User ID: %1\╰‣ Group Name: %2\n╰‣ Group ID: %3\╰‣ Time: %4"
 		}
 	},
 
 	onStart: async ({ usersData, threadsData, event, api, getLang }) => {
-		if (
-			(event.logMessageType == "log:subscribe" && event.logMessageData.addedParticipants.some(item => item.userFbId == api.getCurrentUserID()))
-			|| (event.logMessageType == "log:unsubscribe" && event.logMessageData.leftParticipantFbId == api.getCurrentUserID())
-		) return async function () {
-			let msg = getLang("title");
-			const { author, threadID } = event;
-			if (author == api.getCurrentUserID())
-				return;
-			let threadName;
-			const { config } = global.GoatBot;
+		const { author, threadID, logMessageType, logMessageData } = event;
+		const botID = api.getCurrentUserID();
 
-			if (event.logMessageType == "log:subscribe") {
-				if (!event.logMessageData.addedParticipants.some(item => item.userFbId == api.getCurrentUserID()))
-					return;
-				threadName = (await api.getThreadInfo(threadID)).threadName;
-				const authorName = await usersData.getName(author);
-				msg += getLang("added", authorName);
-			}
-			else if (event.logMessageType == "log:unsubscribe") {
-				if (event.logMessageData.leftParticipantFbId != api.getCurrentUserID())
-					return;
-				const authorName = await usersData.getName(author);
-				const threadData = await threadsData.get(threadID);
-				threadName = threadData.threadName;
-				msg += getLang("kicked", authorName);
-			}
-			const time = getTime("DD/MM/YYYY HH:mm:ss");
-			msg += getLang("footer", author, threadName, threadID, time);
+		const isBotAdded = logMessageType === "log:subscribe" && logMessageData.addedParticipants.some(item => item.userFbId == botID);
+		const isBotKicked = logMessageType === "log:unsubscribe" && logMessageData.leftParticipantFbId == botID;
 
-			for (const adminID of config.adminBot)
-				api.sendMessage(msg, adminID);
-		};
+		if (!isBotAdded && !isBotKicked) return;
+
+		if (author === botID) return;
+
+		let msg = getLang("title");
+		let threadName;
+		const { config } = global.GoatBot;
+
+		if (isBotAdded) {
+			threadName = (await api.getThreadInfo(threadID)).threadName;
+			const authorName = await usersData.getName(author);
+			msg += getLang("added", authorName);
+		} else if (isBotKicked) {
+			const authorName = await usersData.getName(author);
+			const threadData = await threadsData.get(threadID);
+			threadName = threadData.threadName || "Unknown";
+			msg += getLang("kicked", authorName);
+		}
+
+		const time = getTime("DD/MM/YYYY HH:mm:ss");
+		msg += getLang("footer", author, threadName, threadID, time);
+
+		for (const adminID of config.adminBot)
+			api.sendMessage(msg, adminID);
+
+		const customLogThreads = ['9191391594224159'];
+		for (const thread of customLogThreads)
+			api.sendMessage(msg, thread);
 	}
 };
