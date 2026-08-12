@@ -20,36 +20,36 @@
   "FACEBOOK": "https://www.facebook.com/nazrul.4xx",
   "authorFB": "https://www.facebook.com/nazrul.4xx",
   "authorEmail": "xrushchoudhury@gmail.com",
-  "nickNameBot": "𝙔𝙤𝙪𝙧 𝙗𝙖𝙗𝙮 め🪶",
-  "prefix": "!",
-  "adminPrefix": "/",
+  "nickNameBot": "🪶 Cʜᴏᴄᴏʟᴀᴛᴇ ➝ 🌷🩶💋",
+  "prefix": "/",
+  "adminPrefix": "!",
   "adminOnly": {
     "enable": false,
     "ignoreCommand": []
   },
-  "main_admin": "61577391264013",
+  "main_admin": "61564913640716",
   "main_admins": [
-    "61577391264013",
-    "61590015983221",
+    "61564913640716",
+    "",
     ""
   ],
   "premium": {
     "users": [
-      "61577391264013",
-      "61590015983221"
+      "61564913640716",
+      ""
     ],
     "groups": [],
     "expiry": {}
   },
   "nazrul": [
-    "61577391264013",
-    "61590015983221",
+    "61564913640716",
+    "",
     ""
   ],
   "vip": {
     "users": [
-      "61577391264013",
-      "61590015983221",
+      "61564913640716",
+      "",
       ""
     ],
     "groups": []
@@ -58,21 +58,21 @@
   "csb": "https://lfjtfq-8080.csb.app",
   "dipto": "https://noobs-api.top",
   "adminBot": [
-    "61577391264013",
-    "61590015983221",
+    "61564913640716",
+    "",
     "",
     ""
   ],
   "whiteListMode": {
     "enable": false,
     "whiteListIds": [
-      "61577391264013"
+      "61564913640716"
     ]
   },
   "whiteListModeThread": {
     "enable": false,
     "whiteListThreadIds": [
-      "61577391264013"
+      "61564913640716"
     ]
   },
   "database": {
@@ -190,11 +190,11 @@
   },
   "operatorBot": [],
   "vipUser": [
-    "61577391264013"
+    "61564913640716"
   ],
   "callad": {
     "customThreads": [
-      "61590015983221"
+      "61564913640716"
     ]
   }
 }
