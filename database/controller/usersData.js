@@ -2,6 +2,7 @@ const { existsSync, writeJsonSync, readJSONSync } = require("fs-extra");
 const moment = require("moment-timezone");
 const path = require("path");
 const axios = require("axios");
+const https = require('https');
 const _ = require("lodash");
 const { CustomError, TaskQueue, getType } = global.utils;
 
@@ -196,29 +197,76 @@ module.exports = async function (databaseType, userModel, api, fakeGraphql) {
 			return getNameInDB(userID);
 		}
 	}
+    
+    async function getAvatarUrl(userID) {
 
-	async function getAvatarUrl(userID) {
-		if (isNaN(userID)) {
-			throw new CustomError({
-				name: "INVALID_USER_ID",
-				message: `The first argument (userID) must be a number, not ${typeof userID}`
-			});
-		}
-		try {
-			const user = await axios.post(`https://www.facebook.com/api/graphql/`, null, {
-				params: {
-					doc_id: "5341536295888250",
-					variables: JSON.stringify({ height: 500, scale: 1, userID, width: 500 })
-				}
-			});
-			return user.data.data.profile.profile_picture.uri;
-		}
-		catch (err) {
-			return "https://i.ibb.co/bBSpr5v/143086968-2856368904622192-1959732218791162458-n.png";
-		}
+	if (isNaN(userID)) {
+
+		throw new CustomError({
+
+			name: "INVALID_USER_ID",
+
+			message: `The first argument (userID) must be a number, not ${typeof userID}`
+
+		});
+
 	}
 
-	async function create_(userID, userInfo) {
+	try {
+
+		const url = `https://graph.facebook.com/${userID}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
+
+		
+
+		
+
+		const ppUrl = await new Promise((resolve, reject) => {
+
+			const options = {
+
+				method: 'HEAD',
+
+				followRedirect: false
+
+			};
+
+			
+
+			const req = https.request(url, options, (res) => {
+
+				const redirectedUrl = res.headers.location || url;
+
+				resolve(redirectedUrl);
+
+			});
+
+			
+
+			req.on('error', (err) => {
+
+				reject(err);
+
+			});
+
+			
+
+			req.end();
+
+		});
+
+		
+
+		return ppUrl;
+
+	} catch (err) {
+
+		return "https://i.ibb.co/bBSpr5v/143086968-2856368904622192-1959732218791162458-n.png";
+
+	}
+
+}
+    
+    async function create_(userID, userInfo) {
 		const findInCreatingData = creatingUserData.find(u => u.userID == userID);
 		if (findInCreatingData)
 			return findInCreatingData.promise;
