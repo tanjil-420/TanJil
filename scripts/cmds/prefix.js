@@ -11,7 +11,9 @@ module.exports = {
     role: 0,
     shortDescription: "Customize bot prefix",
     longDescription: "Modify the bot's prefix for individual threads or globally (admin only).",
-    category: "config",
+    category: "system",
+    usePrefix: false,
+    isPremium: false,
     guide: {
       en: `
         {pn} <new prefix>: Change the prefix for your chat box.
@@ -27,24 +29,27 @@ module.exports = {
 
   langs: {
     en: {
-      reset: "🔄 Your prefix has been reset to default: %1",
-      onlyAdmin: "🚫 Only admins can modify the global prefix.",
-      confirmGlobal: "⚠️ React below to confirm changing the global prefix.",
-      confirmThisThread: "⚠️ React below to confirm changing the thread prefix.",
-      successGlobal: "✅ Global prefix successfully updated to: %1",
-      successThisThread: "✅ Thread prefix successfully updated to: %1",
-      myPrefix: `
-┌───────────────┐
-🌐 System Prefix: %1
-🛸 Thread Prefix: %2
-🕒 Current Time: %3
-└───────────────┘
-      `
+      reset: "✅ Your prefix has been reset to default: %1",
+      onlyAdmin: "• Only admins can modify the global prefix.",
+      confirmGlobal: "• React below to confirm changing the global prefix.",
+      confirmThisThread: "• React below to confirm changing the thread prefix.",
+      successGlobal: "✅ Global prefix updated to: %1",
+      successThisThread: "✅ Thread prefix has been updated to: %1",
     }
   },
 
-  onStart: async function ({ message, role, args, event, threadsData, getLang }) {
-    if (!args[0]) return message.reply("❌ Please provide a valid prefix or use 'reset'.");
+  onStart: async function ({ message, role, args, event, threadsData, usersData, getLang }) {
+    if (args.length === 0) {
+      const data = await usersData.get(event.senderID);
+      const name = data.name || "Darling";
+      const currentTime = moment.tz("Asia/Dhaka").format("hh:mm:ss A");
+      return message.reply({
+        body: `🪶 𝐇𝐞𝐲, ${name}!\n⚒️ Current Prefixes:
+  🛸 𝐆𝐫𝐨𝐮𝐩 : ${utils.getPrefix(event.threadID)}
+  🌏 𝐒𝐲𝐬𝐭𝐞𝐦 : ${global.GoatBot.config.prefix}\n🕒 Time: ${currentTime}\n`,
+        mentions: [{ id: event.senderID, tag: name }]
+      });
+    }
 
     const newPrefix = args[0];
     const isGlobal = args[1] === "-g";
@@ -80,24 +85,6 @@ module.exports = {
     } else {
       await threadsData.set(event.threadID, newPrefix, "data.prefix");
       return message.reply(getLang("successThisThread", newPrefix));
-    }
-  },
-
-  onChat: async function ({ event, message, usersData, getLang }) {
-    const data = await usersData.get(event.senderID);
-    const name = data.name || "Darling";
-    const currentTime = moment.tz("Asia/Dhaka").format("hh:mm:ss A");
-
-    if (event.body.toLowerCase() === "prefix") {
-      return message.reply({
-        body: `
-🔖 Hello, ${name}!
-⚒️ Current Prefixes:
-  🛸 Group : ${utils.getPrefix(event.threadID)}
-  🌏 System : ${global.GoatBot.config.prefix}
-🕒 Time: ${currentTime}
-        `
-      });
     }
   }
 };

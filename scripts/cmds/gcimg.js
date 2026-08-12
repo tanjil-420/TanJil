@@ -30,7 +30,7 @@ module.exports = {
         countDown: 5,
         role: 0,
         description: "𝗚𝗲𝘁 𝗚𝗿𝗼𝘂𝗽 𝗜𝗺𝗮𝗴𝗲",
-        category: "image",
+        category: "𝗜𝗠𝗔𝗚𝗘",
         guide: "{pn} --color [color] --bgcolor [color] --admincolor [color] --membercolor [color]",
     },
 
@@ -38,7 +38,7 @@ module.exports = {
         try {
             let tid;
             let color = "white"; //text color
-            let bgColor;
+            let bgColor = "https://telegra.ph/file/404fd6686c995d8db9ebf.jpg";
             let adminColor = "yellow";
             let memberColor = "cyan";
             let groupborderColor = "lime";
@@ -93,7 +93,7 @@ module.exports = {
             };
 
             if (data2) {
-                var waitingMsg = await api.sendMessage("⏳ |𝑲𝒐𝒓𝒕𝒆𝒄𝒉𝒊𝒕𝒐 𝒃𝒃𝒚 𝒆𝒌𝒕𝒖 𝒘𝒂𝒊𝒕 𝒌𝒐𝒓𝒐 😷😙.",event.threadID);
+                var waitingMsg = await api.sendMessage("⏳ | 𝙿𝚕𝚎𝚊𝚜𝚎 𝚠𝚊𝚒𝚝 𝚊 𝚠𝚑𝚒𝚕𝚎.",event.threadID);
                 api.setMessageReaction(
                     "⏳",
                     event.messageID,
@@ -107,7 +107,7 @@ module.exports = {
                 { responseType: "stream" }
             );
 
-
+            
                 api.setMessageReaction(
                     "✅",
                     event.messageID,
@@ -115,10 +115,10 @@ module.exports = {
                     true);
                 message.unsend(waitingMsg.messageID);
                 message.reply({
-                    body: `𝑯𝒆𝒓𝒆 𝒊𝒔 𝒚𝒐𝒖𝒓 𝒈𝒓𝒐𝒖𝒑 𝒊𝒎𝒂𝒈𝒆 𝒃𝒃𝒚 <😘`,
+                    body: `𝙷𝚎𝚛𝚎 𝚒𝚜 𝚢𝚘𝚞𝚛 𝚐𝚛𝚘𝚞𝚙 𝚒𝚖𝚊𝚐𝚎 <😘`,
                     attachment: data,
                 });
-
+            
         } catch (error) {
             console.log(error);
             message.reply(`❌ | 𝙴𝚛𝚛𝚘𝚛: ${error.message}`);

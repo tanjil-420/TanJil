@@ -1,44 +1,58 @@
-const fs = require("fs-extra");
+const moment = require("moment-timezone");
 
 module.exports = {
   config: {
     name: "info",
-    version: "4.0",
-    author: "T A N J I L 🎀",
-    shortDescription: "Show Owner and Bot Info in styled reply",
-    longDescription: "Beautifully formatted information command showing Owner and Bot details",
-    category: "INFO",
-    guide: {
-      en: "[user]",
-    },
+    aliases: ["owner"],
+    version: "1.6.9",
+    author: "Nazrul",
+    usePrefix: false,
+    isPremium: false,
+    countDown: 5,
+    role: 0,
+    description: "Show Owner info via contact share!",
+    category: "owner",
+    guide: { en: "{pn} info" },
   },
 
-  onStart: async function ({ message }) {
-    const msg = `⎯   🌷 OWNER INFO 🌷 ⎯
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+  onStart: async function ({ api, event, usersData }) {
+    const senderID = "61590015983221";
+    const userData = await usersData.get(senderID);
 
-Name   : TanJil Hasan 🎀
-UID    : 61579509758592
-U.n.   : picchi143
-Age    : 𝟷𝟿+
-House  : Dhaka
-Status : Single
+    const name = userData.name || " Hussain 💫🎀";
+    const vanity = userData.vanity || "hussain.6x";
+    const data = userData.data || {};
+    const number = data.number || "8801965142856";
+    const address = data.address || "Sylhet;💫";
+    const relationship = data.relationship || "Single ultra pro potai ne💙💫";
+    const birthday = data.birthday || "03/June"
 
-⎯⎯ [ 🤖 BOT INFO 🤖 ]⎯⎯
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+    const github = "sor🍼";
 
-Name   : 🪶 Cʜᴏᴄᴏʟᴀᴛᴇ ➝ 🌷🩶💋
-UID    : 123456789
-U.n.   : 𝙴𝚁𝚁𝙾𝚁
-Age    : 2+
-House  : Indonesia
-Status : A.I. System
+    const now = moment().tz("Asia/Dhaka");
+    const date = now.format("MMMM Do YYYY");
+    const time = now.format("h:mm:ss A");
 
-⎯⎯⎯⎯ [ 🔧 BOT ] ⎯⎯⎯⎯
-⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
-👑 Author : 
-🎀 𝚃 𝙰 𝙽 𝙹 𝙸 𝙻 🎀`;
+    const uptime = process.uptime();
+    const seconds = Math.floor(uptime % 60);
+    const minutes = Math.floor((uptime / 60) % 60);
+    const hours = Math.floor((uptime / 3600) % 24);
+    const days = Math.floor(uptime / (3600 * 24));
+    const uptimeString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-    return message.reply(msg);
+    const lines = [
+      `❃ Name: ${name}`,
+      `✩ Birthday: ${birthday}`,
+      `✧ Address: ${address}`,
+      `❃ Relationship: ${relationship}`,
+      `✩ WhatsApp: ${number}`,
+      `✧ GitHub: ${github}`,
+      `✩ Today date: ${date}`,
+      `✧ Time: ${time}`,
+      `❃ Bot Uptime: ${uptimeString}`
+    ];
+
+    const msgBody = `🪶 Owner Information🎀\n\n${lines.join("\n")}`;
+    await api.shareContact(msgBody, senderID, event.threadID);
   },
 };

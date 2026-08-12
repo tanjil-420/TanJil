@@ -7,7 +7,7 @@ module.exports = {
 	config: {
 		name: "update",
 		version: "1.5",
-		author: "NTKhang",
+		author: "Chat GPT, NTKhang",
 		role: 2,
 		description: {
 			en: "Check for and install updates for the chatbot.",
@@ -36,7 +36,7 @@ module.exports = {
 			botWillRestart: "🔄 | Bot sẽ khởi động lại ngay!"
 		},
 		en: {
-			noUpdates: "✅ | You are using the latest version of TanJil Bot V3.1 (v%1).",
+			noUpdates: "✅ | You are using the latest version of GoatBot V2 (v%1).",
 			updatePrompt: "💫 | You are using version %1. There is a new version %2. Do you want to update the chatbot to the latest version?"
 				+ "\n\n⬆️ | The following files will be updated:"
 				+ "\n%3%4"
