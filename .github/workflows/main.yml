@@ -1,0 +1,37 @@
+name: Node.js Bot 24/7 Run
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies & Canvas tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+        npm install tough-cookie --save
+        npm install --unsafe-perm=true --allow-root --legacy-peer-deps
+
+    - name: Start the Bot
+      run: |
+        node index.js
