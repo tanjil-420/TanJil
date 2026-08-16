@@ -1,36 +1,68 @@
-# 👋 Hello, I'm Tanjil Hasan!
+<div align="center">
 
-![Banner](https://files.catbox.moe/egw7cj.jpg)
+  <img src="https://files.catbox.moe/egw7cj.jpg" width="120" style="border-radius: 50%;" alt="Avatar">
 
-I'm a curious and tech-enthusiastic individual, currently focused on learning new skills every day. I dream of making it big someday and becoming someone truly valuable in life.
+  # 👋 Hi, I'm TanJil.4x
+  ### 💻 Backend Developer | JavaScript & Node.js Enthusiast
 
----
+  <p align="center">
+    <img src="https://komarev.com/ghpvc/?username=YOUR_GITHUB_USERNAME&style=flat-square&color=blueviolet" alt="Profile Views">
+    <img src="https://img.shields.io/badge/Status-Coding%20_%20Building-success?style=flat-square&logo=git" alt="Status">
+  </p>
 
-## 🧑‍💻 About Me
-
-- 🔭 Currently exploring new knowledge and skills
-- 🌱 Not in school right now, but working hard for a better future
-- 🎮 Passionate about: Religion, Gaming (Free Fire), Music
-- 📍 Location: Dhaka, Mirpur 12, D Block, Muslim Bazaar-
-
----
-
-
-## 📫 Connect With Me
-
-- 🧵 Facebook: [TanJil Hasan](https://www.facebook.com/picchii.143?mibextid=ZbWKwL)
-- 📱 WhatsApp: +8801XXXXXXXXX
+</div>
 
 ---
 
-## 📂 GitHub Stats
+## ⚡ About Me
 
-![Tanjil's GitHub stats](https://github-readme-stats.vercel.app/api?username=your-github-username&show_icons=true&theme=radical)
+* 🔭 **Current Focus:** Building powerful Node.js bots, backend logic, and expanding my tech stack.
+* ⚡ **Core Skills:** JavaScript, Node.js, API Management, and Script Debugging.
+* 🌐 **Location:** [Insert Your City/Country, e.g., Dhaka, Bangladesh]
+* 🎯 **Goal:** Leveling up every single day to build efficient, scalable systems and making an impact through code.
 
 ---
 
-## 💖 Thanks for Visiting!
+## 🛠️ Tech Stack & Tools
 
-Thank you for taking the time to check out my profile!  
-Feel free to reach out if you'd like to connect or collaborate.  
-Stay safe, stay awesome! 😊
+<div align="center">
+
+  ![JavaScript](https://img.shields.io/badge/JavaScript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black)
+  ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+  ![Express.js](https://img.shields.io/badge/Express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+  ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+  <br>
+  ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
+  ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+  ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+  ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+
+</div>
+
+---
+
+## 📊 GitHub Stats
+
+<div align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=tanjil.420&show_icons=true&theme=tokyonight&hide_border=true&bg_color=16161e" alt="GitHub Stats">
+  <br>
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tanjil.420&layout=compact&theme=tokyonight&hide_border=true&bg_color=16161e" alt="Top Languages">
+</div>
+
+---
+
+## 📬 Connect With Me
+
+<div align="center">
+
+  [![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=facebook&logoColor=white)]([https://www.facebook.com/4x.tanjil])
+  [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)]([https://www.telegram.com/tanjil_4x])
+  [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)]([Insert Discord Link])
+
+</div>
+
+---
+
+<div align="center">
+  <i>"Always learning, always building." 🚀</i>
+</div>
