@@ -1,11 +1,11 @@
 <div align="center">
 
   <!-- Large & Premium Futuristic Cyberpunk Banner -->
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=220&section=header&text=TanJil%20420%20//%20System%20Online&fontSize=38&fontColor=ffffff&fontAlignY=45&animation=fadeIn&desc=Backend%20Developer%20&%20Cyberpunk%20Architect%20//%202050%20Mode&descSize=16&descAlignY=70" width="100%">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=220&section=header&text=TanJil%20-420%20//%20System%20Online&fontSize=38&fontColor=ffffff&fontAlignY=45&animation=fadeIn&desc=Power%20by%20tanjil.4x%20&%20Cyberpunk%20Architect%20//%202050%20Mode&descSize=16&descAlignY=70" width="100%">
 
   <br><br>
 
-  # 👋 Hi, I'm TanJil Hasan
+  # 👋 Hi, I'm TanJil.4x
   ### 💻 Full-Stack & Backend Developer | JavaScript & Node.js Specialist
 
   <p align="center">
