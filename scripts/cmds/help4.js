@@ -7,7 +7,7 @@ const doNotDelete = "[〲٭⃝✨⃝YOUR 卝 চুন্নি ⃝✨⃝٭ ]";
 
 module.exports = {
   config: {
-    name: "help4",
+    name: "help2",
     version: "1.17",
     author: "ArYan",
     countDown: 5,
