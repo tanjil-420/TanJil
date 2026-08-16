@@ -6,7 +6,7 @@ module.exports = {
     aliases: ["owner"],
     version: "1.6.9",
     author: "Nazrul",
-    usePrefix: false,
+    usePrefix: true,
     isPremium: false,
     countDown: 5,
     role: 0,
