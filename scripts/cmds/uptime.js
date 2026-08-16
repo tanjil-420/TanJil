@@ -6,11 +6,21 @@ const { exec } = require("child_process");
 // Global start time for uptime calculation
 if (!global.startTime) global.startTime = Date.now();
 
+// Detect running platform
+const detectPlatform = () => {
+  if (process.env.RENDER) return "Render";
+  if (process.env.RAILWAY_ENVIRONMENT) return "Railway";
+  if (process.env.REPL_ID) return "Replit";
+  if (process.env.GITHUB_ACTIONS) return "GitHub";
+  if (process.env.NIX_BUILD_TOP) return "Nix";
+  return "Host";
+};
+
 module.exports = {
   config: {
     name: "uptime",
-    aliases: ["up"],
-    version: "2.3",
+    aliases: ["up","upt"],
+    version: "2.5",
     author: "T A N J I L 🎀",
     countDown: 1,
     role: 0,
@@ -29,9 +39,7 @@ module.exports = {
     const input = ctx.event.body?.toLowerCase().trim();
     const { config } = module.exports;
     const triggers = [config.name, ...(config.aliases || [])];
-
     if (!triggers.includes(input)) return;
-
     await module.exports.sendUptime(ctx);
   },
 
@@ -39,7 +47,6 @@ module.exports = {
     const now = new Date();
     const formatDate = now.toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
 
-    // Convert seconds to readable format
     const toTime = (sec) => {
       const d = Math.floor(sec / 86400);
       const h = Math.floor((sec % 86400) / 3600);
@@ -48,7 +55,6 @@ module.exports = {
       return `${d ? `${d}d ` : ""}${h}h ${m}m ${s}s`;
     };
 
-    // Bot uptime calculated without process.uptime()
     const uptimeBot = Math.floor((Date.now() - global.startTime) / 1000);
     const uptimeSys = os.uptime();
 
@@ -65,10 +71,13 @@ module.exports = {
     const cpuUsage = (usage.cpu || 0).toFixed(1);
     const cpuModel = os.cpus()[0]?.model || "Unknown";
     const cpuCores = os.cpus().length;
+    const platform = detectPlatform();
 
     let pkgCount = 0;
     try {
-      pkgCount = Object.keys(JSON.parse(fs.readFileSync("package.json")).dependencies || {}).length;
+      pkgCount = Object.keys(
+        JSON.parse(fs.readFileSync("package.json")).dependencies || {}
+      ).length;
     } catch {
       pkgCount = "N/A";
     }
@@ -76,7 +85,6 @@ module.exports = {
     const users = await usersData.getAll().catch(() => []);
     const threads = await threadsData.getAll().catch(() => []);
 
-    // Get disk usage dynamically (Linux/Mac)
     const getDiskUsage = () =>
       new Promise((resolve) => {
         exec("df -h --output=used,avail / | tail -n1", (err, stdout) => {
@@ -97,6 +105,7 @@ module.exports = {
 💻 CPU: ${cpuModel}
 💻 Cores: ${cpuCores}
 💻 Load: ${cpuUsage}%
+🚀 Platform: ${platform}
 
 💾 RAM: ${usedRam} MB / ${totalRam} GB
 💾 Free memory: ${freeRam} GB
