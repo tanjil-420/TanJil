@@ -1,9 +1,9 @@
 module.exports = {
   config: {
-    name: "bal2",
+    name: "balance2",
     aliases: ["bal2"],
     version: "1.0",
-    author: "T A N J I L ",
+    author: "T A N J I L 🎀",
     role: 2, // Admin only
     shortDescription: {
       en: "Manage users' balance"
