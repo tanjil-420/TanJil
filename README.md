@@ -44,9 +44,9 @@
 ## 📊 GitHub Stats
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=tanjil.420&show_icons=true&theme=tokyonight&hide_border=true&bg_color=16161e" alt="GitHub Stats">
+  <img src="https://github-readme-stats.vercel.app/api?username=tanjil-420&show_icons=true&theme=tokyonight&hide_border=true&bg_color=16161e" alt="GitHub Stats">
   <br>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tanjil.420&layout=compact&theme=tokyonight&hide_border=true&bg_color=16161e" alt="Top Languages">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tanjil-420&layout=compact&theme=tokyonight&hide_border=true&bg_color=16161e" alt="Top Languages">
 </div>
 
 ---
@@ -55,8 +55,8 @@
 
 <div align="center">
 
-  [![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=facebook&logoColor=white)]([https://www.facebook.com/4x.tanjil])
-  [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)]([https://www.telegram.com/tanjil_4x])
+  [![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=facebook&logoColor=white)]([https://www.facebook.com/share/1DU6pp8sDY/])
+  [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)]([t.me/tanjil_4x])
   [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)]([Insert Discord Link])
 
 </div>
