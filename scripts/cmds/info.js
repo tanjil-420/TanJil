@@ -16,18 +16,18 @@ module.exports = {
   },
 
   onStart: async function ({ api, event, usersData }) {
-    const senderID = "61590015983221";
+    const senderID = "61564913640716";
     const userData = await usersData.get(senderID);
 
-    const name = userData.name || " Hussain 💫🎀";
-    const vanity = userData.vanity || "hussain.6x";
+    const name = userData.name || "T A N J I L 🎀";
+    const vanity = userData.vanity || "4x.tanjil";
     const data = userData.data || {};
-    const number = data.number || "8801965142856";
-    const address = data.address || "Sylhet;💫";
-    const relationship = data.relationship || "Single ultra pro potai ne💙💫";
-    const birthday = data.birthday || "03/June"
+    const number = data.number || "8801985208807";
+    const address = data.address || "Dhaka";
+    const relationship = data.relationship || "Single";
+    const birthday = data.birthday || "25/March"
 
-    const github = "sor🍼";
+    const github = "Sorry, the fork is my owner's personal. 😾";
 
     const now = moment().tz("Asia/Dhaka");
     const date = now.format("MMMM Do YYYY");
@@ -42,13 +42,13 @@ module.exports = {
 
     const lines = [
       `❃ Name: ${name}`,
-      `✩ Birthday: ${birthday}`,
-      `✧ Address: ${address}`,
+      `❃ Birthday: ${birthday}`,
+      `❃ Address: ${address}`,
       `❃ Relationship: ${relationship}`,
-      `✩ WhatsApp: ${number}`,
-      `✧ GitHub: ${github}`,
-      `✩ Today date: ${date}`,
-      `✧ Time: ${time}`,
+      `❃ WhatsApp: ${number}`,
+      `❃ GitHub: ${github}`,
+      `❃ Today date: ${date}`,
+      `❃ Time: ${time}`,
       `❃ Bot Uptime: ${uptimeString}`
     ];
 
