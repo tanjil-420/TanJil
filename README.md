@@ -1,12 +1,12 @@
 <div align="center">
 
-  <img src="https://files.catbox.moe/egw7cj.jpg" width="120" style="border-radius: 50%;" alt="Avatar">
+  <img src="https://files.catbox.moe/egw7cj.jpg" width="100%" style="border-radius: 8px;" alt="Banner">
 
-  # 👋 Hi, I'm TanJil.4x
+  # 👋 Hi, I'm TanJil Hasan
   ### 💻 Backend Developer | JavaScript & Node.js Enthusiast
 
   <p align="center">
-    <img src="https://komarev.com/ghpvc/?username=YOUR_GITHUB_USERNAME&style=flat-square&color=blueviolet" alt="Profile Views">
+    <img src="https://komarev.com/ghpvc/?username=tanjil-420&style=flat-square&color=blueviolet" alt="Profile Views">
     <img src="https://img.shields.io/badge/Status-Coding%20_%20Building-success?style=flat-square&logo=git" alt="Status">
   </p>
 
@@ -18,7 +18,7 @@
 
 * 🔭 **Current Focus:** Building powerful Node.js bots, backend logic, and expanding my tech stack.
 * ⚡ **Core Skills:** JavaScript, Node.js, API Management, and Script Debugging.
-* 🌐 **Location:** [Insert Your City/Country, e.g., Dhaka, Bangladesh]
+* 🌐 **Location:** Dhaka, Bangladesh
 * 🎯 **Goal:** Leveling up every single day to build efficient, scalable systems and making an impact through code.
 
 ---
@@ -55,9 +55,8 @@
 
 <div align="center">
 
-  [![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=facebook&logoColor=white)]([https://www.facebook.com/share/1DU6pp8sDY/])
-  [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)]([t.me/tanjil_4x])
-  [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)]([Insert Discord Link])
+  [![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/share/1DU6pp8sDY/)  
+  [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/tanjil_4x)
 
 </div>
 
