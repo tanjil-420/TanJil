@@ -25,10 +25,11 @@ jobs:
         node-version: ${{ matrix.matrix.node-version }}
         cache: 'npm'
 
-    - name: Install dependencies & Canvas tools
+        - name: Install dependencies & Canvas tools
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+        npm install tough-cookie --save
         npm install --unsafe-perm=true --allow-root --legacy-peer-deps
 
     - name: Start the Bot
