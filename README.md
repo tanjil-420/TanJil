@@ -6,7 +6,6 @@
   ### 💻 Backend Developer | JavaScript & Node.js Enthusiast
 
   <p align="center">
-    <img src="https://komarev.com/ghpvc/?username=tanjil-420&style=flat-square&color=blueviolet" alt="Profile Views">
     <img src="https://img.shields.io/badge/Status-Coding%20_%20Building-success?style=flat-square&logo=git" alt="Status">
   </p>
 
@@ -37,16 +36,6 @@
   ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
   ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 
-</div>
-
----
-
-## 📊 GitHub Stats
-
-<div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=tanjil-420&show_icons=true&theme=tokyonight&hide_border=true&bg_color=16161e" alt="GitHub Stats">
-  <br>
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tanjil-420&layout=compact&theme=tokyonight&hide_border=true&bg_color=16161e" alt="Top Languages">
 </div>
 
 ---
