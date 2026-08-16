@@ -1,49 +1,63 @@
+const axios = require("axios");
+
 module.exports = {
   config: {
     name: "top",
-    aliases: ["tp"],
-    version: "1.1",
-    author: "T A N J I L 🎀",
+    version: "1.7",
+    author: "MahMUD",
     role: 0,
-    shortDescription: {
-      en: "Top 15 Rich Users"
-    },
-    longDescription: {
-      en: "Displays the top 15 richest users with their name, UID, and money"
-    },
-    category: "group",
+    category: "economy",
     guide: {
-      en: "{pn}"
+      en: "{pn} bal | {pn} exp"
     }
   },
 
-  onStart: async function ({ api, args, message, event, usersData }) {
-    function formatMoney(amount) {
-      if (amount >= 1e33) return `${(amount / 1e33).toFixed(2)} Dc💵`;
-      if (amount >= 1e30) return `${(amount / 1e30).toFixed(2)} No💵`;
-      if (amount >= 1e27) return `${(amount / 1e27).toFixed(2)} Oc💵`;
-      if (amount >= 1e24) return `${(amount / 1e24).toFixed(2)} Sp💵`;
-      if (amount >= 1e21) return `${(amount / 1e21).toFixed(2)} Sx💵`;
-      if (amount >= 1e18) return `${(amount / 1e18).toFixed(2)} Qi💵`;
-      if (amount >= 1e15) return `${(amount / 1e15).toFixed(2)} Qa💵`;
-      if (amount >= 1e12) return `${(amount / 1e12).toFixed(2)} T💵`;
-      if (amount >= 1e9)  return `${(amount / 1e9).toFixed(2)} B💵`;
-      if (amount >= 1e6)  return `${(amount / 1e6).toFixed(2)} M💵`;
-      if (amount >= 1e3)  return `${(amount / 1e3).toFixed(2)} K💵`;
-      return `${amount} 💵`;
-    }
+  onStart: async function ({ api, args, message, usersData }) {
+     const obfuscatedAuthor = String.fromCharCode(77, 97, 104, 77, 85, 68); 
+     if (module.exports.config.author !== obfuscatedAuthor) {
+     return api.sendMessage("You are not authorized to change the author name.", event.threadID, event.messageID);
+     }
+    try {
+      const type = args[0]?.toLowerCase() || "bal";
+      const allUsers = await usersData.getAll();
 
-    const allUsers = await usersData.getAll();
-    const topUsers = allUsers
-      .sort((a, b) => b.money - a.money)
-      .slice(0, 15);
+      if (!allUsers || allUsers.length === 0) return;
 
-    const topUsersList = topUsers.map((user, index) =>
-      `${index + 1}. 🎀 Name: ${user.name}\n    UID: ${user.userID}\n   💸 Balance: ${formatMoney(user.money)}`
-    );
+      if (type === "exp") {
+        const topExp = allUsers
+          .filter(u => (u.exp || 0) > 0)
+          .sort((a, b) => b.exp - a.exp)
+          .slice(0, 10);
 
-    const messageText = `🎉 𝗧𝗢𝗣 𝟭𝟱 𝗥𝗜𝗖𝗛𝗘𝗦𝗧 𝗨𝗦𝗘𝗥𝗦 🎉\n\n${topUsersList.join('\n\n')}\n\n⚡ Keep earning and climb to the top! ⚡`;
+        const topList = topExp.map((user, index) => {
+          return `${index + 1}. ${user.name || "Unknown"}: ${formatShortNumber(user.exp)} EXP`;
+        });
 
-    message.reply(messageText);
+        return message.reply(`👑 Top 10 EXP Users:\n\n${topList.join("\n")}`);
+      }
+
+      const topMoney = allUsers
+        .filter(u => (u.money || 0) > 0)
+        .sort((a, b) => b.money - a.money)
+        .slice(0, 10);
+
+      const topList = topMoney.map((user, index) => {
+        return `${index + 1}. ${user.name || "Unknown"}: $${formatShortNumber(user.money)}`;
+      });
+
+      return message.reply(`👑 Top 10 Richest Users:\n\n${topList.join("\n")}`);
+    } catch (e) {}
   }
 };
+
+function formatShortNumber(num) {
+  if (!num) return "0";
+  const units = ["", "K", "M", "B", "T"];
+  let unit = 0;
+  let value = typeof num !== "number" ? parseInt(num) || 0 : num;
+  while (value >= 1000 && unit < units.length - 1) {
+    value /= 1000;
+    unit++;
+  }
+  return Number(value.toFixed(1)).toString().replace(/\.0$/, "") + units[unit];
+}

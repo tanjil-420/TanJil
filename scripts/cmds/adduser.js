@@ -4,15 +4,12 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 module.exports = {
 	config: {
 		name: "adduser",
-		version: "1.4",
+		aliases: ["add"],
+		version: "1.5",
 		author: "NTKhang",
 		countDown: 5,
-		role: 1,
-		shortDescription: {
-			vi: "Thêm thành viên vào box chat",
-			en: "Add user to box chat"
-		},
-		longDescription: {
+		role: 0,
+		description: {
 			vi: "Thêm thành viên vào box chat của bạn",
 			en: "Add user to box chat of you"
 		},
@@ -46,8 +43,9 @@ module.exports = {
 	},
 
 	onStart: async function ({ message, api, event, args, threadsData, getLang }) {
-		const { members, adminIDs, approvalMode } = await threadsData.get(event.threadID);
 		const botID = api.getCurrentUserID();
+		let threadData = await threadsData.get(event.threadID);
+		let { members, adminIDs, approvalMode } = threadData;
 
 		const success = [
 			{
@@ -74,6 +72,11 @@ module.exports = {
 		}
 
 		const regExMatchFB = /(?:https?:\/\/)?(?:www\.)?(?:facebook|fb|m\.facebook)\.(?:com|me)\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-\.]+)(?:\/)?/i;
+		
+		if (!args[0] && event.messageReply) {
+			args = [event.messageReply.senderID];
+		}
+		
 		for (const item of args) {
 			let uid;
 			let continueLoop = false;
@@ -111,12 +114,21 @@ module.exports = {
 			if (continueLoop == true)
 				continue;
 
-			if (members.some(m => m.userID == uid && m.inGroup)) {
+			await threadsData.refreshInfo(event.threadID);
+			threadData = await threadsData.get(event.threadID);
+			members = threadData.members;
+			
+			const userInGroup = members.some(m => m.userID == uid && m.inGroup);
+			
+			if (userInGroup) {
 				checkErrorAndPush(getLang("alreadyInGroup"), item);
 			}
 			else {
 				try {
 					await api.addUserToGroup(uid, event.threadID);
+					
+					await threadsData.refreshInfo(event.threadID);
+					
 					if (approvalMode === true && !adminIDs.includes(botID))
 						success[1].uids.push(uid);
 					else

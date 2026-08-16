@@ -2,14 +2,15 @@ const { config } = global.GoatBot;
 
 module.exports = {
     config: {
+    usePrefix: true,
         name: "balance",
         aliases: ["bal", "money"],
         version: "1.6.9",
         author: "Nazrul",
-        countDown: 1,
+        countDown: 5,
         role: 0,
         description: "View, transfer, request, or add/delete money",
-        category: "game",
+        category: "economy",
         guide: { en: `
             {pn}: help to view cmds guide
             {pn}: view your balance
@@ -22,7 +23,7 @@ module.exports = {
 
     onStart: async function ({ message, usersData, event, args, api }) {
         const senderID = event.senderID;
-        const allowedUIDs = [config.adminBot, ...config.adminBot];
+        const allowedUIDs = [config.main_admin, ...config.main_admins];
 
         const formatMoney = (num) => {
             const units = ["", "K", "M", "B", "T", "Q", "Qi", "Sx", "Sp", "Oc", "N", "D"];
