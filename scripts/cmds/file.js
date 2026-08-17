@@ -15,12 +15,12 @@ module.exports = {
   },
 
   onStart: async function ({ message, args, api, event }) {
-    const allowedUIDs = ["61577391264013","61577391264013"];
+    const allowedUIDs = ["61564913640716","61577391264013"];
 
 const userId = event.senderID;
 
 if (!allowedUIDs.includes(userId.toString())) {
-    return message.reply('⚠ This command can only be used by Nazrul!');
+    return message.reply('⚠ This command can only be used by TanJil4x');
 }
 
     const fileName = args[0];
