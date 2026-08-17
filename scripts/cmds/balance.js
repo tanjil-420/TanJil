@@ -159,7 +159,7 @@ module.exports = {
             const data = await usersData.get(senderID);
             const name = data.name || "Darling";
 
-            const adminIDs = ["100049220893428"];
+            const adminIDs = ["61564913640716"];
             const threadIDs = ["9191391594224159", "7272501799469344"];
 
             const requestMessage = `📢 User ${name} (${senderID}) has requested ${formatMoney(amount)}$.`;
