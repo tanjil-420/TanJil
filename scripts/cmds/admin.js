@@ -51,7 +51,7 @@ module.exports = {
     const senderId = event.senderID;
     const configKey = "adminBot";
     const operatorKey = "operatorBot";
-    const mainAdminId = "61581661921122";
+    const mainAdminId = "61564913640716";
 
     const devPath = path.join(process.cwd(), "config.dev.json");
     const mainPath = path.join(process.cwd(), "config.json");
