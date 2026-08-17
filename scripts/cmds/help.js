@@ -4,15 +4,11 @@ const path = require("path");
 const { getPrefix } = global.utils;
 const { commands, aliases } = global.GoatBot;
 const doNotDelete = "〲٭⃝✨⃝YOUR 卝 চুন্নি ⃝✨⃝٭";
-/** 
- * @author NTKhang
- * @author: do not delete
- */
 
 module.exports = {
   config: {
     name: "help",
-    version: "2.2.0",
+    version: "2.2.1",
     author: "T A N J I L 🎀",
     countDown: 3,
     role: 0,
@@ -70,9 +66,8 @@ module.exports = {
     const commandName = (args[0] || "").toLowerCase();
     const command = commands.get(commandName) || commands.get(aliases.get(commandName));
 
-    // ————————— HELP BY CATEGORY (eg: /help -game) ————————— //
     if (!command && args[0] && args[0].startsWith("-") && isNaN(args[0])) {
-      const categoryInput = args[0].slice(1).toLowerCase(); // remove "-"
+      const categoryInput = args[0].slice(1).toLowerCase();
       const categoryCommands = [];
 
       for (const [, value] of commands) {
@@ -90,7 +85,6 @@ module.exports = {
       return message.reply(msg);
     }
 
-    // ————————— LIST ALL COMMAND ————————— //
     if (!command && (!args[0] || !isNaN(args[0]))) {
       const arrayInfo = [];
       let msg = "";
@@ -139,10 +133,8 @@ module.exports = {
       }
     }
 
-    // ————————— COMMAND DOES NOT EXIST ————————— //
     if (!command && args[0]) return message.reply(getLang("commandNotFound", args[0]));
 
-    // ————————— INFO COMMAND ————————— //
     const formSendMessage = {};
     const configCommand = command.config;
 
@@ -181,6 +173,9 @@ module.exports = {
 
     let sendWithAttachment = false;
 
+    // --- Fixed here ---
+    const category = configCommand.category || "No category";
+
     if (args[1]?.match(/^-g|guide|-u|usage$/)) {
       formSendMessage.body = getLang("onlyUsage", guideBody.split("\n").join("\n✵"));
       sendWithAttachment = true;
@@ -188,22 +183,21 @@ module.exports = {
       formSendMessage.body = getLang("onlyAlias", aliasesString, aliasesThisGroup);
     else if (args[1]?.match(/^-r|role$/))
       formSendMessage.body = getLang("onlyRole", roleText);
-    else if (args[1]?.match(/^-i|info$/))
+    else {
+      // Check the argument list of getLang (argument number 10 is category)
       formSendMessage.body = getLang(
         "getInfoCommand",
-        configCommand.name,
-        description,
-        aliasesString,
-        aliasesThisGroup,
-        configCommand.version,
-        roleText,
-        configCommand.countDown || 1,
-        author || "",
-        `${guideBody.split("\n").join("\n»")}`,
-        configCommand.category || "No category"
+        configCommand.name, // %1
+        description,         // %2
+        aliasesString,       // %3
+        aliasesThisGroup,    // %4
+        configCommand.version, // %5
+        roleText,            // %6
+        configCommand.countDown || 1, // %7
+        author || "",        // %8
+        `${guideBody.split("\n").join("\n»")}`, // %9
+        category             // %10
       );
-    else {
-      formSendMessage.body = getLang("getInfoCommand", configCommand.name, description, aliasesString, aliasesThisGroup, configCommand.version, roleText, configCommand.countDown || 1, author || "", `${guideBody.split("\n").join("\n»")}`);
       sendWithAttachment = true;
     }
 
@@ -250,4 +244,4 @@ function cropContent(content, max) {
     content = content.slice(0, max - 3) + "...";
   }
   return content;
-        }
+}
