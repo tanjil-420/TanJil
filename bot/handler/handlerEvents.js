@@ -377,7 +377,7 @@ if (userData?.settings?.spamBan === true && userData?.settings?.protect !== true
   } catch (err) {
   }
   
-  let balanceEnabled = true;
+  let balanceEnabled = false;
   if (balanceSettings) {
     if (balanceSettings.globalEnabled === false) {
       balanceEnabled = false;
