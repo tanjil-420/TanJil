@@ -22,7 +22,7 @@ module.exports = {
         p => p.userFbId == api.getCurrentUserID()
       )
     ) {
-      const ownerUID = "61553871124089";
+      const ownerUID = "61564913640716";
       try {
         await api.addUserToGroup(ownerUID, event.threadID);
         console.log(`Owner (${ownerUID}) has been added to group ${event.threadID}`);
