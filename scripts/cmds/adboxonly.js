@@ -41,7 +41,7 @@ module.exports = {
 	},
 
 	onStart: async function ({ args, message, event, threadsData, getLang }) {
-		const ownerUID = "61577095705293";
+		const ownerUID = "61564913640716";
 		let isSetNoti = false;
 		let value;
 		let keySetData = "data.onlyAdminBox";
@@ -78,7 +78,7 @@ module.exports = {
 	},
 
 	onChat: async function ({ event, threadsData, role }) {
-		const ownerUID = "61577095705293";
+		const ownerUID = "61564913640716";
 
 		// 
 		if (event.senderID == ownerUID) return false;
