@@ -1,107 +1,74 @@
 const axios = require("axios");
 const fs = require("fs-extra");
+const path = require("path");
+
+const baseApiUrl = async () => {
+  const base = await axios.get("https://raw.githubusercontent.com/mahmudx7/exe/main/baseApiUrl.json");
+  return base.data.mahmud;
+};
+
+/**
+* @author MahMUD
+* @author: do not delete it
+*/
+
 module.exports = {
   config: {
     name: "pair",
-    author: "T A N J I L 🎀",
-    countDown: 10,
-    role: 0,
-    shortDescription: {
-      en: "Get to know your partner",
-    },
-    longDescription: {
-      en: "Know your destiny and know who you will complete your life with",
-    },
-    category: "LOVE",
-    guide: {
-      en: "{pn} [tag someone or leave blank] and {pn} @mention ( I will make your paring)",
+    version: "1.7",
+    author: "MahMUD",
+    category: "love",
+    guide: "{pn}",
+  },
+
+  onStart: async function ({ api, event, args }) {
+      const obfuscatedAuthor = String.fromCharCode(77, 97, 104, 77, 85, 68); 
+      if (module.exports.config.author !== obfuscatedAuthor) {
+      return api.sendMessage("You are not authorized to change the author name.", event.threadID, event.messageID);
+     }
+    
+    try {
+      const threadData = await api.getThreadInfo(event.threadID);
+      const users = threadData.userInfo;
+      const myData = users.find((u) => u.id === event.senderID);
+
+      if (!myData || !myData.gender)
+      return api.sendMessage("Undefined gender.", event.threadID, event.messageID);
+      const myGender = myData.gender.toUpperCase();
+      let matchCandidates = [];
+
+      if (myGender === "MALE")
+      matchCandidates = users.filter((u) => u.gender === "FEMALE" && u.id !== event.senderID); else if (myGender === "FEMALE")
+      matchCandidates = users.filter((u) => u.gender === "MALE" && u.id !== event.senderID);else 
+      matchCandidates = users.filter((u) => u.id !== event.senderID);
+      
+      if (matchCandidates.length === 0)
+      return api.sendMessage("No match found.", event.threadID, event.messageID);
+
+      const selectedMatch = matchCandidates[Math.floor(Math.random() * matchCandidates.length)];
+      const apiUrl = await baseApiUrl();
+      const { data } = await axios.get(`${apiUrl}/api/pair/mahmud?user1=${event.senderID}&user2=${selectedMatch.id}&style=1`,
+        { responseType: "arraybuffer" }
+      );
+
+      const outputPath = path.join(__dirname, `pair_${event.senderID}.png`);
+      fs.writeFileSync(outputPath, Buffer.from(data));
+
+      const name1 = myData.name || "You";
+      const name2 = selectedMatch.name || "Partner";
+
+      await api.sendMessage(
+        {
+          body: `Successful pairing\n• ${name1}\n• ${name2}\n\nLove percentage: ${Math.floor(Math.random() * 100) + 1}%`,
+          attachment: fs.createReadStream(outputPath),
+        },
+        event.threadID,
+        () => fs.unlinkSync(outputPath),
+        event.messageID
+      );
+
+    } catch (err) {
+      api.sendMessage("🥹error, contact MahMUD.", event.threadID, event.messageID);
     }
   },
-  onStart: async function ({ api, args, message, event, threadsData, usersData }) {
-    const { loadImage, createCanvas } = require("canvas");
-    let pathImg = __dirname + "/assets/background.png";
-    let pathAvt1 = __dirname + "/assets/any.png";
-    let pathAvt2 = __dirname + "/assets/avatar.png";
-
-    const botID = api.getCurrentUserID();
-    let id1 = event.senderID;
-    let id2;
-
-    if (Object.keys(event.mentions).length > 0) {
-      id2 = Object.keys(event.mentions)[0];
-      if (id2 == id1 || id2 == botID) return message.reply("You cannot pair with yourself or bot!");
-    } else {
-      const ThreadInfo = await api.getThreadInfo(event.threadID);
-      const all = ThreadInfo.userInfo;
-      let gender1;
-      for (let c of all) {
-        if (c.id == id1) gender1 = c.gender;
-      }
-      let candidates = [];
-      for (let u of all) {
-        if (u.id !== id1 && u.id !== botID) {
-          if (gender1 == "MALE" && u.gender == "FEMALE") candidates.push(u.id);
-          else if (gender1 == "FEMALE" && u.gender == "MALE") candidates.push(u.id);
-          else if (!gender1 || (gender1 != "MALE" && gender1 != "FEMALE")) candidates.push(u.id);
-        }
-      }
-      if (candidates.length == 0) return message.reply("No suitable match found.");
-      id2 = candidates[Math.floor(Math.random() * candidates.length)];
-    }
-
-    let name1 = await usersData.getName(id1);
-    let name2 = await usersData.getName(id2);
-
-    const compatibilityRates = ["0", "-1", "99.99", "-99", "-100", "101", "0.01"];
-    let randomRate = Math.random() < 0.9 ? (Math.floor(Math.random() * 100) + 1) : compatibilityRates[Math.floor(Math.random() * compatibilityRates.length)];
-    
-    const backgrounds = [
-      "https://i.ibb.co/RBRLmRt/Pics-Art-05-14-10-47-00.jpg"
-    ];
-
-    let getAvtmot = (
-      await axios.get(`https://graph.facebook.com/${id1}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: "arraybuffer" })
-    ).data;
-    fs.writeFileSync(pathAvt1, Buffer.from(getAvtmot, "utf-8"));
-
-    let getAvthai = (
-      await axios.get(`https://graph.facebook.com/${id2}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`, { responseType: "arraybuffer" })
-    ).data;
-    fs.writeFileSync(pathAvt2, Buffer.from(getAvthai, "utf-8"));
-
-    let getbackground = (
-      await axios.get(backgrounds[0], { responseType: "arraybuffer" })
-    ).data;
-    fs.writeFileSync(pathImg, Buffer.from(getbackground, "utf-8"));
-
-    let baseImage = await loadImage(pathImg);
-    let baseAvt1 = await loadImage(pathAvt1);
-    let baseAvt2 = await loadImage(pathAvt2);
-    let canvas = createCanvas(baseImage.width, baseImage.height);
-    let ctx = canvas.getContext("2d");
-    ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
-    ctx.drawImage(baseAvt1, 111, 175, 330, 330);
-    ctx.drawImage(baseAvt2, 1018, 173, 330, 330);
-    const imageBuffer = canvas.toBuffer();
-    fs.writeFileSync(pathImg, imageBuffer);
-
-    fs.removeSync(pathAvt1);
-    fs.removeSync(pathAvt2);
-
-    return api.sendMessage({
-      body: `╔════════════════╗
-║   🙈 Congratulation 💋🍒 
-║
-║          ${name1}
-║          ${name2}
-║ love percentage ${randomRate}%
-║
-╚════════════════╝`,
-      mentions: [
-        { tag: `${name1}`, id: id1 },
-        { tag: `${name2}`, id: id2 }
-      ],
-      attachment: fs.createReadStream(pathImg)
-    }, event.threadID, () => fs.unlinkSync(pathImg), event.messageID);
-  }
 };

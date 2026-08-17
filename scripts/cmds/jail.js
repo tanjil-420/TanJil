@@ -1,60 +1,58 @@
-const DIG = require("discord-image-generation");
-const fs = require("fs-extra");
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+
+const baseApiUrl = async () => {
+  const base = await axios.get(
+    "https://raw.githubusercontent.com/mahmudx7/HINATA/main/baseApiUrl.json"
+  );
+  return base.data.mahmud;
+};
+
+/**
+* @author MahMUD
+* @author: do not delete it
+*/
 
 module.exports = {
-	config: {
-		name: "jail",
-		version: "1.1",
-		author: "your love ( modified by TanJil )",
-		countDown: 5,
-		role: 0,
-		shortDescription: "Jail image",
-		longDescription: "Jail image",
-		category: "funny",
-		guide: "{pn} @mention | {pn} <uid> | {pn} <reply>"
-	},
+  config: {
+    name: "jail",
+    aliases: [],
+    version: "1.7",
+    author: "MahMUD",
+    role: 0,
+    category: "fun",
+    cooldown: 10,
+    guide: "gay [mention-reply-UID]",
+  },
 
-	langs: {
-		vi: {
-			noTag: "Bạn phải tag người bạn muốn tù"
-		},
-		en: {
-			noTag: "tag the rapist"
-		}
-	},
+  onStart: async function ({ api, event, args }) {
+     const obfuscatedAuthor = String.fromCharCode(77, 97, 104, 77, 85, 68);
+     if (module.exports.config.author !== obfuscatedAuthor) {
+     return api.sendMessage(
+     "You are not authorized to change the author name.", event.threadID, event.messageID );
+   }
 
-	onStart: async function ({ event, message, usersData, args, getLang }) {
-		let target;
+    const { threadID, messageID, messageReply, mentions } = event;
+    let id2; if (messageReply) { id2 = messageReply.senderID; } else if (Object.keys(mentions).length > 0) {
+    id2 = Object.keys(mentions)[0];  } else if (args[0]) {  id2 = args[0]; } else {
+    return api.sendMessage( "baby, Mention, reply, or provide UID of the target.", threadID, messageID );
+  }
 
-		const mention = Object.keys(event.mentions);
+   try {
+    const url = `${await baseApiUrl()}/api/dig?type=jail&user=${id2}`;
+    const response = await axios.get(url, { responseType: "arraybuffer" });
+    const filePath = path.join(__dirname, `jail_${id2}.png`);
+    fs.writeFileSync(filePath, response.data);
 
-		if (mention.length > 0) {
-			// Case 1: @mention
-			target = mention[0];
-		} else if (args[0] && !isNaN(args[0])) {
-			// Case 2: UID
-			target = args[0];
-		} else if (event.messageReply) {
-			// Case 3: Reply
-			target = event.messageReply.senderID;
-		}
-
-		if (!target) return message.reply(getLang("noTag"));
-
-		const uid1 = event.senderID;
-		const uid2 = target;
-
-		const avatarURL1 = await usersData.getAvatarUrl(uid1);
-		const avatarURL2 = await usersData.getAvatarUrl(uid2);
-
-		const img = await new DIG.Jail().getImage(avatarURL2);
-		const pathSave = `${__dirname}/tmp/${uid2}_Jail.png`;
-		fs.writeFileSync(pathSave, Buffer.from(img));
-
-		const content = args.join(' ').replace(target, "");
-		message.reply({
-			body: `${(content || "welcome rapist to jail😈")} 🚔`,
-			attachment: fs.createReadStream(pathSave)
-		}, () => fs.unlinkSync(pathSave));
-	}
+     
+    api.sendMessage({ attachment: fs.createReadStream(filePath),
+    body: `𝐄𝐟𝐟𝐞𝐜𝐭 jail 𝐬𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥 🐸`,
+     },
+    threadID, () => fs.unlinkSync(filePath),  messageID );
+  } catch (err) {
+    console.error(err);
+    api.sendMessage(`🥹error, contact MahMUD.`, threadID, messageID);
+    }
+  },
 };

@@ -1,107 +1,89 @@
 const axios = require("axios");
-const { createCanvas, loadImage } = require("canvas");
-const fs = require("fs");
-const path = require("path");
+const fs = require("fs-extra");
 
 module.exports = {
   config: {
     name: "pair3",
-    author: "Nyx x @Ariyan | Fahad Islam ",
+    version: "1.6.9",
+    author: "Nazrul",
+    countDown: 7,
+    role: 0,
+    description: "Find your love partner by pair",
     category: "love",
+    guide: { en:"{pn}" }
   },
 
   onStart: async function ({ api, event, usersData }) {
     try {
-      const senderData = await usersData.get(event.senderID);
-      const senderName = senderData.name;
-      const threadData = await api.getThreadInfo(event.threadID);
-      const users = threadData.userInfo;
+      const { threadID, senderID } = event;
 
-      const myData = users.find((user) => user.id === event.senderID);
-      if (!myData || !myData.gender) {
-        return api.sendMessage(
-          "⚠ Could not determine your gender.",
-          event.threadID,
-          event.messageID
-        );
+      const ThreadInfo = await api.getThreadInfo(threadID);
+      const allUsers = ThreadInfo.userInfo;
+
+      const botID = api.getCurrentUserID();
+
+      const senderInfo = allUsers.find((user) => user.id === senderID);
+      if (!senderInfo || !senderInfo.gender) {
+        return api.sendMessage("Your gender is not defined, so pairing cannot proceed.", threadID);
       }
 
-      const myGender = myData.gender;
-      let matchCandidates = [];
+      const senderGender = senderInfo.gender;
 
-      if (myGender === "MALE") {
-        matchCandidates = users.filter(
-          (user) => user.gender === "FEMALE" && user.id !== event.senderID
+      let oppositeGenderUsers;
+      if (senderGender === "MALE") {
+        oppositeGenderUsers = allUsers.filter(
+          (user) => user.gender === "FEMALE" && user.id !== botID && user.id !== senderID
         );
-      } else if (myGender === "FEMALE") {
-        matchCandidates = users.filter(
-          (user) => user.gender === "MALE" && user.id !== event.senderID
+      } else if (senderGender === "FEMALE") {
+        oppositeGenderUsers = allUsers.filter(
+          (user) => user.gender === "MALE" && user.id !== botID && user.id !== senderID
         );
       } else {
-        return api.sendMessage(
-          "⚠ Your gender is undefined. Cannot find a match.",
-          event.threadID,
-          event.messageID
-        );
+        return api.sendMessage("Your gender is not supported for pairing.", threadID);
       }
 
-      if (matchCandidates.length === 0) {
-        return api.sendMessage(
-          "❌ No suitable match found in the group.",
-          event.threadID,
-          event.messageID
-        );
+      if (oppositeGenderUsers.length === 0) {
+        return api.sendMessage("No users of the opposite gender are available for pairing.", threadID);
       }
 
-      const selectedMatch =
-        matchCandidates[Math.floor(Math.random() * matchCandidates.length)];
-      const matchName = selectedMatch.name;
+      const randomUser = oppositeGenderUsers[Math.floor(Math.random() * oppositeGenderUsers.length)];
 
-      // Canvas drawing part
-      const width = 800;
-      const height = 400;
-      const canvas = createCanvas(width, height);
-      const ctx = canvas.getContext("2d");
+      const senderName = (await usersData.get(senderID)).name;
+      const randomUserName = (await usersData.get(randomUser.id)).name;
 
-      const background = await loadImage(
-        "https://i.postimg.cc/Vk9rxb8v/Picsart-25-06-19-16-37-53-834.jpg"
-      );
-      const sIdImage = await loadImage(
-        `https://graph.facebook.com/${event.senderID}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`
-      );
-      const pairPersonImage = await loadImage(
-        `https://graph.facebook.com/${selectedMatch.id}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`
-      );
+      const lovePercentage = Math.floor(Math.random() * 101);
 
-      ctx.drawImage(background, 0, 0, width, height);
-      ctx.drawImage(sIdImage, 385, 40, 170, 170);
-      ctx.drawImage(pairPersonImage, width - 213, 190, 180, 170);
+      const senderAvatarUrl = `https://graph.facebook.com/${senderID}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
+      const randomUserAvatarUrl = `https://graph.facebook.com/${randomUser.id}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
 
-      const outputPath = path.join(__dirname, "pair_output.png");
-      const out = fs.createWriteStream(outputPath);
-      const stream = canvas.createPNGStream();
-      stream.pipe(out);
+      const senderAvatarData = (await axios.get(senderAvatarUrl, { responseType: "arraybuffer" })).data;
+      const randomUserAvatarData = (await axios.get(randomUserAvatarUrl, { responseType: "arraybuffer" })).data;
 
-      out.on("finish", () => {
-        const lovePercent = Math.floor(Math.random() * 31) + 70;
-        api.sendMessage(
-          {
-            body: `🥰𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹 𝗽𝗮𝗶𝗿𝗶𝗻𝗴\n・${senderName} 🎀\n・${matchName} 🎀\n💌𝗪𝗶𝘀𝗵 𝘆𝗼𝘂 𝘁𝘄𝗼 𝗵𝘂𝗻𝗱𝗿𝗲𝗱 𝘆𝗲𝗮𝗿𝘀 𝗼𝗳 𝗵𝗮𝗽𝗽𝗶𝗻𝗲𝘀𝘀 ❤❤\n\n𝗟𝗼𝘃𝗲 𝗽𝗲𝗿𝗰𝗲𝗻𝘁𝗮𝗴𝗲: ${lovePercent}% 💙`,
-            attachment: fs.createReadStream(outputPath),
-          },
-          event.threadID,
-          () => {
-            fs.unlinkSync(outputPath);
-          },
-          event.messageID
-        );
+      const senderAvatarPath = __dirname + "/cache/sender.png";
+      const randomUserAvatarPath = __dirname + "/cache/random.png";
+
+      fs.writeFileSync(senderAvatarPath, Buffer.from(senderAvatarData));
+      fs.writeFileSync(randomUserAvatarPath, Buffer.from(randomUserAvatarData));
+
+      const message = {
+        body: `🎀 Congratulations, Found a Lovely Couple!\n\n•🪶 ${senderName} \n• ${lovePercentage}%\n•🪶 ${randomUserName}`,
+        mentions: [
+          { id: senderID, tag: senderName },
+          { id: randomUser.id, tag: randomUserName }
+        ],
+        attachment: [
+          fs.createReadStream(senderAvatarPath),
+          fs.createReadStream(randomUserAvatarPath)
+        ]
+      };
+
+      api.sendMessage(message, threadID, () => {
+        fs.unlinkSync(senderAvatarPath);
+        fs.unlinkSync(randomUserAvatarPath);
       });
     } catch (error) {
-      api.sendMessage(
-        "❌ An error occurred while trying to find a match.\n" + error.message,
-        event.threadID,
-        event.messageID
-      );
+      console.error("Error in pair command:", error);
+      api.sendMessage("🦆💨 There is no love on your forehead.", event.threadID);
     }
-  },
+  }
 };

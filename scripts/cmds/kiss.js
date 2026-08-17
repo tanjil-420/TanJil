@@ -1,90 +1,76 @@
-const fs = require("fs-extra");
 const axios = require("axios");
-const Canvas = require("canvas");
+const fs = require("fs");
 const path = require("path");
+
+const mahmud = async () => {
+const base = await axios.get("https://raw.githubusercontent.com/mahmudx7/HINATA/main/baseApiUrl.json");
+  return base.data.mahmud;
+};
+
+/**
+* @author MahMUD
+* @author: do not delete it
+*/
 
 module.exports = {
   config: {
     name: "kiss",
-    aliases: ["kiss"],
-    version: "2.1",
-    author: "Efat",
+    version: "1.7",
+    author: "MahMUD",
     countDown: 5,
     role: 0,
-    shortDescription: "Kiss with custom image",
-    longDescription: "Generate a kiss image with the mentioned user using a custom background.",
-    category: "funny",
+    longDescription: "Generate anime-style kiss image",
+    category: "love",
     guide: "{pn} @mention"
   },
 
-  onStart: async function ({ api, message, event, usersData }) {
-    const mention = Object.keys(event.mentions);
-    if (mention.length === 0) return message.reply("Please mention someone to kiss.");
-
-    let senderID = event.senderID;
-    let mentionedID = mention[0];
-
+  onStart: async function ({ message, event, api }) {
     try {
-      // Get avatar URLs
-      const avatar1 = await usersData.getAvatarUrl(mentionedID); // left
-      const avatar2 = await usersData.getAvatarUrl(senderID);    // right
+      const obfuscatedAuthor = String.fromCharCode(77, 97, 104, 77, 85, 68);
+      if (module.exports.config.author.trim() !== obfuscatedAuthor) {
+        return api.sendMessage(
+          "❌ | You are not authorized to change the author name.",
+          event.threadID,
+          event.messageID
+        );
+      }
 
-      // Load avatars
-      const [avatarImg1, avatarImg2] = await Promise.all([
-        Canvas.loadImage(avatar1),
-        Canvas.loadImage(avatar2)
-      ]);
+      const mention = Object.keys(event.mentions);
+      if (mention.length === 0) {
+        return message.reply("Please mention someone to kiss 💋");
+      }
 
-      // Load and scale background
-      const bgUrl = "https://bit.ly/44bRRQG";
-      const bgRes = await axios.get(bgUrl, { responseType: "arraybuffer" });
-      const bg = await Canvas.loadImage(bgRes.data);
+      const senderID = event.senderID;
+      const targetID = mention[0];
 
-      // Set new canvas size
-      const canvasWidth = 900;
-      const canvasHeight = 600;
+      const base = await mahmud();
+      const apiURL = `${base}/api/kiss`;
 
-      const canvas = Canvas.createCanvas(canvasWidth, canvasHeight);
-      const ctx = canvas.getContext("2d");
+      message.reply("💞 Generating your kiss image, please wait...");
 
-      // Draw scaled background
-      ctx.drawImage(bg, 0, 0, canvasWidth, canvasHeight);
+      const response = await axios.post(
+        apiURL,
+        { senderID, targetID },
+        { responseType: "arraybuffer" }
+      );
 
-      // Avatar settings
-      const avatarSize = 230;
-      const y = canvasHeight / 2 - avatarSize - 90; // adjusted to stay upward // shifted upward
-
-      // Left (mentioned user)
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(150 + avatarSize / 2, y + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.clip();
-      ctx.drawImage(avatarImg1, 150, y, avatarSize, avatarSize);
-      ctx.restore();
-
-      // Right (sender)
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(canvasWidth - 150 - avatarSize / 2, y + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.clip();
-      ctx.drawImage(avatarImg2, canvasWidth - 150 - avatarSize, y, avatarSize, avatarSize);
-      ctx.restore();
-
-      // Save and send image
-      const imgPath = path.join(__dirname, "tmp", `${senderID}_${mentionedID}_kiss.png`);
-      await fs.ensureDir(path.dirname(imgPath));
-      fs.writeFileSync(imgPath, canvas.toBuffer("image/png"));
+      const imgPath = path.join(__dirname, `kiss_${senderID}_${targetID}.png`);
+      fs.writeFileSync(imgPath, Buffer.from(response.data, "binary"));
 
       message.reply({
-        body: "Kisssssss!",
+        body: "💋 Here’s your kiss image!",
         attachment: fs.createReadStream(imgPath)
-      }, () => fs.unlinkSync(imgPath));
+      });
+
+      setTimeout(() => {
+        if (fs.existsSync(imgPath)) {
+          fs.unlinkSync(imgPath);
+        }
+      }, 10000);
 
     } catch (err) {
-      console.error("Error in kiss command:", err);
-      message.reply("There was an error creating the kiss image.");
+      console.error("Error in kiss command:", err.message || err);
+      message.reply("🥹error bby.");
     }
   }
 };

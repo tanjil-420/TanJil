@@ -1,42 +1,78 @@
+const { findUid } = global.utils;
+const https = require('https');
+
 module.exports = {
   config: {
     name: "profile",
-    aliases: ["pp"],
-    version: "1.1",
-    author: "NIB | No prefix by ArYan",
+    aliases: ["pfp", "pp"],
+    version: "1.2",
+    author: "Nazrul",
     countDown: 5,
     role: 0,
-    shortDescription: "PROFILE image",
-    longDescription: "PROFILE image",
+    description: "PROFILE image",
     category: "image",
-    guide: {
-      en: "   {pn} @tag"
-    }
+    guide: { en: "{pn} @tag | userID | reply | Facebook URL" }
   },
 
-  langs: {
-    vi: {
-      noTag: "Bạn phải tag người bạn muốn tát"
-    },
-    en: {
-      noTag: "You must tag the person you want to get profile picture of"
+  onStart: async function ({ event, message, usersData, args, api }) {
+    const regExCheckURL = /^(http|https):\/\/(www\.)?facebook\.com\/[^ "]+$/;
+    const ACCESS_TOKEN = "6628568379|c1e620fa708a1d5696fb991c1bde5662";
+
+    const getUID = async () => {
+      if (event.messageReply) return event.messageReply.senderID.toString();
+      if (event.mentions && Object.keys(event.mentions).length > 0) return Object.keys(event.mentions)[0];
+      if (args[0] && /^\d+$/.test(args[0])) return args[0];
+      if (args[0] && regExCheckURL.test(args[0])) {
+        if (api?.getUID) return await api.getUID(args[0]);
+        return await findUid(args[0]);
+      }
+      return event.senderID.toString();
+    };
+
+    const getProfilePictureUrl = (uid) => {
+      return new Promise((resolve, reject) => {
+        const url = `https://graph.facebook.com/${uid}/picture?width=512&height=512&access_token=${ACCESS_TOKEN}`;
+        const options = {
+          method: 'HEAD',
+          followRedirect: false
+        };
+
+        const req = https.request(url, options, (res) => {
+          const ppUrl = res.headers.location || url;
+          resolve(ppUrl);
+        });
+
+        req.on('error', (err) => {
+          reject(err);
+        });
+
+        req.end();
+      });
+    };
+
+    try {
+      const uid = await getUID();
+      
+      let avatarUrl;
+      try {
+        avatarUrl = await getProfilePictureUrl(uid);
+      } catch (error) {
+        avatarUrl = `https://graph.facebook.com/${uid}/picture?width=512&height=512&access_token=${ACCESS_TOKEN}`;
+      }
+
+      const avatarStream = await global.utils.getStreamFromURL(avatarUrl);
+      
+      if (avatarStream) {
+        message.reply({ attachment: avatarStream });
+      } else {
+        const fallbackAvatar = await usersData.getAvatarUrl(event.senderID);
+        if (fallbackAvatar) {
+          const fallbackStream = await global.utils.getStreamFromURL(fallbackAvatar);
+          message.reply({ attachment: fallbackStream });
+        }
+      }
+    } catch (e) {
+      message.reply("Error fetching profile picture");
     }
-  },
-
-  onStart: async function ({ event, message, usersData, args, getLang }) {
-    let avt;
-    const uid1 = event.senderID;
-    const uid2 = Object.keys(event.mentions)[0];
-    if(event.type == "message_reply"){
-      avt = await usersData.getAvatarUrl(event.messageReply.senderID)
-    } else{
-      if (!uid2){avt =  await usersData.getAvatarUrl(uid1)
-              } else{avt = await usersData.getAvatarUrl(uid2)}}
-
-
-    message.reply({
-      body:"",
-      attachment: await global.utils.getStreamFromURL(avt)
-  })
   }
-}
+};

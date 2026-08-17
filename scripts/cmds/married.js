@@ -3,13 +3,13 @@ module.exports = {
         name: "married",
         aliases: ["married"],
         version: "1.0",
-        author: "kivv ( modified by TanJil)",
+        author: "kivv",
         countDown: 5,
         role: 0,
         shortDescription: "get a wife",
         longDescription: "",
-        category: "funny",
-        guide: "{pn} @mention | {pn} <uid> | {pn} <reply>"
+        category: "married",
+        guide: "{@mention}"
     }, 
 
     onLoad: async function () {
@@ -61,36 +61,13 @@ module.exports = {
     },
 
     onStart: async function ({ event, api, args }) { 
-        const fs = require("fs-extra");
+        const fs = require ("fs-extra");
         const { threadID, messageID, senderID } = event;
-
-        let target;
         const mention = Object.keys(event.mentions);
-
-        if (mention.length > 0) {
-            // Case 1: @mention
-            target = mention[0];
-        } else if (args[0] && !isNaN(args[0])) {
-            // Case 2: UID
-            target = args[0];
-        } else if (event.messageReply) {
-            // Case 3: Reply
-            target = event.messageReply.senderID;
+        if (!mention[0]) return api.sendMessage("Please mention 1 person.", threadID, messageID);
+        else {
+            const one = senderID, two = mention[0];
+            return this.makeImage({ one, two }).then(path => api.sendMessage({ body: "", attachment: fs.createReadStream(path) }, threadID, () => fs.unlinkSync(path), messageID));
         }
-
-        if (!target) 
-            return api.sendMessage("Please mention someone, give UID, or reply to their message.", threadID, messageID);
-
-        const one = senderID;
-        const two = target;
-
-        return this.makeImage({ one, two }).then(path => 
-            api.sendMessage(
-                { body: "", attachment: fs.createReadStream(path) },
-                threadID,
-                () => fs.unlinkSync(path),
-                messageID
-            )
-        );
     }
 };

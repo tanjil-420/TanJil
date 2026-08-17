@@ -1,103 +1,58 @@
-const fs = require("fs-extra");
 const axios = require("axios");
-const Canvas = require("canvas");
+const fs = require("fs");
 const path = require("path");
+
+const baseApiUrl = async () => {
+  const base = await axios.get(
+    "https://raw.githubusercontent.com/mahmudx7/HINATA/main/baseApiUrl.json"
+  );
+  return base.data.mahmud;
+};
+
+/**
+* @author MahMUD
+* @author: do not delete it
+*/
 
 module.exports = {
   config: {
     name: "rip",
-    aliases: ["rip"],
-    version: "2.1",
-    author: "T A N J I L 🎀",
-    countDown: 5,
+    aliases: [],
+    version: "1.7",
+    author: "MahMUD",
     role: 0,
-    shortDescription: "rip with custom image",
-    longDescription: "Generate a rip image with the mentioned user using a custom background.",
-    category: "funny",
-    guide: "{pn} @mention | {pn} <uid> | {pn} <reply>"
+    category: "fun",
+    cooldown: 10,
+    guide: "rip [mention-reply-UID]",
   },
 
-  onStart: async function ({ api, message, event, usersData, args }) {
-    let target;
-    const mention = Object.keys(event.mentions);
+  onStart: async function ({ api, event, args }) {
+     const obfuscatedAuthor = String.fromCharCode(77, 97, 104, 77, 85, 68);
+     if (module.exports.config.author !== obfuscatedAuthor) {
+     return api.sendMessage(
+     "You are not authorized to change the author name.", event.threadID, event.messageID );
+   }
 
-    if (mention.length > 0) {
-      // Case 1: @mention
-      target = mention[0];
-    } else if (args[0] && !isNaN(args[0])) {
-      // Case 2: UID
-      target = args[0];
-    } else if (event.messageReply) {
-      // Case 3: Reply
-      target = event.messageReply.senderID;
-    }
-
-    if (!target) return message.reply("Please mention someone, give UID, or reply to their message.");
-
-    const senderID = event.senderID;
-    const mentionedID = target;
-
-    try {
-      // Get avatar URLs
-      const avatar1 = await usersData.getAvatarUrl(mentionedID); // left
-      const avatar2 = await usersData.getAvatarUrl(senderID);    // right
-
-      // Load avatars
-      const [avatarImg1, avatarImg2] = await Promise.all([
-        Canvas.loadImage(avatar1),
-        Canvas.loadImage(avatar2)
-      ]);
-
-      // Load and scale background
-      const bgUrl = "https://res.cloudinary.com/mahiexe/image/upload/v1748115544/mahi/1748115543353-515845916.png";
-      const bgRes = await axios.get(bgUrl, { responseType: "arraybuffer" });
-      const bg = await Canvas.loadImage(bgRes.data);
-
-      // Set new canvas size
-      const canvasWidth = 900;
-      const canvasHeight = 600;
-
-      const canvas = Canvas.createCanvas(canvasWidth, canvasHeight);
-      const ctx = canvas.getContext("2d");
-
-      // Draw scaled background
-      ctx.drawImage(bg, 0, 0, canvasWidth, canvasHeight);
-
-      // Avatar settings
-      const avatarSize = 230;
-      const y = canvasHeight / 2 - avatarSize - 90;
-
-      // Left (mentioned user)
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(150 + avatarSize / 2, y + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.clip();
-      ctx.drawImage(avatarImg1, 150, y, avatarSize, avatarSize);
-      ctx.restore();
-
-      // Right (sender)
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(canvasWidth - 150 - avatarSize / 2, y + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.clip();
-      ctx.drawImage(avatarImg2, canvasWidth - 150 - avatarSize, y, avatarSize, avatarSize);
-      ctx.restore();
-
-      // Save and send image
-      const imgPath = path.join(__dirname, "tmp", `${senderID}_${mentionedID}_kiss.png`);
-      await fs.ensureDir(path.dirname(imgPath));
-      fs.writeFileSync(imgPath, canvas.toBuffer("image/png"));
-
-      message.reply({
-        body: "your friend is death ☠️",
-        attachment: fs.createReadStream(imgPath)
-      }, () => fs.unlinkSync(imgPath));
-
-    } catch (err) {
-      console.error("Error in kiss command:", err);
-      message.reply("There was an error creating the rip image.");
-    }
+    const { threadID, messageID, messageReply, mentions } = event;
+    let id2; if (messageReply) { id2 = messageReply.senderID; } else if (Object.keys(mentions).length > 0) {
+    id2 = Object.keys(mentions)[0];  } else if (args[0]) {  id2 = args[0]; } else {
+    return api.sendMessage( "baby, Mention, reply, or provide UID of the target.", threadID, messageID );
   }
+
+   try {
+    const url = `${await baseApiUrl()}/api/dig?type=rip&user=${id2}`;
+    const response = await axios.get(url, { responseType: "arraybuffer" });
+    const filePath = path.join(__dirname, `rip_${id2}.png`);
+    fs.writeFileSync(filePath, response.data);
+
+     
+    api.sendMessage({ attachment: fs.createReadStream(filePath),
+    body: `𝐄𝐟𝐟𝐞𝐜𝐭 rip 𝐬𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥 🐸`,
+     },
+    threadID, () => fs.unlinkSync(filePath),  messageID );
+  } catch (err) {
+    console.error(err);
+    api.sendMessage(`🥹error bby.`, threadID, messageID);
+    }
+  },
 };
