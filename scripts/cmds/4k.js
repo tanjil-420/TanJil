@@ -1,75 +1,65 @@
-const axios = require("axios");
+const axios = require('axios');
+const fs = require('fs-extra');
+const path = require('path');
 
-const mahmud = async () => {
-  const base = await axios.get("https://raw.githubusercontent.com/mahmudx7/HINATA/main/baseApiUrl.json");
-  return base.data.mahmud;
-};
+const API_BASE = "https://tenzo.is-a.dev/api/tools/4k";
+const CACHE_DIR = path.join(__dirname, 'cache');
 
-/**
-* @author MahMUD
-* @author: do not delete it
-*/
+function extractImageUrl(args, event) {
+  let imageUrl = args.find(arg => arg.startsWith('http'));
+  if (!imageUrl && event.messageReply?.attachments?.length > 0) {
+    const img = event.messageReply.attachments.find(a => a.type === 'photo' || a.type === 'image');
+    if (img?.url) imageUrl = img.url;
+  }
+  return imageUrl;
+}
 
 module.exports = {
   config: {
     name: "4k",
-    version: "1.7",
-    author: "MahMUD",
-    countDown: 10,
+    version: "4.1",
+    author: "Mahi",
+    countDown: 15,
     role: 0,
     category: "image",
-    description: "Enhance or restore image quality using 4k AI.",
-    guide: {
-      en: "{pn} [url] or reply with image"
-    }
+    guide: "4k <url> OR reply to image"
   },
 
-  onStart: async function ({ message, event, args }) {
-    
-    const obfuscatedAuthor = String.fromCharCode(77, 97, 104, 77, 85, 68); 
-    if (module.exports.config.author !== obfuscatedAuthor) {
-      return api.sendMessage("You are not authorized to change the author name.", event.threadID, event.messageID);
-    }
-    const startTime = Date.now();
-    let imgUrl;
+  onStart: async function ({ args, message, event }) {
+    const imageUrl = extractImageUrl(args, event);
+    if (!imageUrl) return message.reply("❌ Please provide an image URL or reply to an image");
 
-    if (event.messageReply?.attachments?.[0]?.type === "photo") {
-      imgUrl = event.messageReply.attachments[0].url;
-    }
+    if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
+    await message.reaction("⏳", event.messageID);
 
-    else if (args[0]) {
-      imgUrl = args.join(" ");
-    }
-
-    if (!imgUrl) {
-      return message.reply("Baby, Please reply to an image or provide an image URL");
-    }
-  
-    const waitMsg = await message.reply("𝐋𝐨𝐚𝐝𝐢𝐧𝐠 𝟒𝐤 𝐢𝐦𝐚𝐠𝐞...𝐰𝐚𝐢𝐭 𝐛𝐚𝐛𝐲 <😘");
-    message.reaction("😘", event.messageID);
-
+    let filePath;
     try {
-      
-      const apiUrl = `${await mahmud()}/api/hd?imgUrl=${encodeURIComponent(imgUrl)}`;
-
-      const res = await axios.get(apiUrl, { responseType: "stream" });
-      if (waitMsg?.messageID) message.unsend(waitMsg.messageID);
-
-      message.reaction("✅", event.messageID);
-
-      const processTime = ((Date.now() - startTime) / 1000).toFixed(2);
-
-      message.reply({
-        body: `✅ | 𝐇𝐞𝐫𝐞'𝐬 𝐲𝐨𝐮𝐫 𝟒𝐤 𝐢𝐦𝐚𝐠𝐞 𝐛𝐚𝐛𝐲`,
-        attachment: res.data
+      const response = await axios.get(`${API_BASE}?url=${encodeURIComponent(imageUrl)}`, {
+        responseType: 'stream',
+        timeout: 120000
       });
 
-    } catch (error) {
-  
-      if (waitMsg?.messageID) message.unsend(waitMsg.messageID);
+      filePath = path.join(CACHE_DIR, `4k_${Date.now()}.jpg`);
+      const writer = fs.createWriteStream(filePath);
+      response.data.pipe(writer);
 
-      message.reaction("❎", event.messageID);
-      message.reply(`🥹error baby, contact MahMUD.`);
+      await new Promise((resolve, reject) => {
+        writer.on('finish', resolve);
+        writer.on('error', reject);
+      });
+
+      await message.reaction("🎀", event.messageID);
+      await message.reply({
+        body: `✅ | Your image has been upscaled`,
+        attachment: fs.createReadStream(filePath)
+      });
+      
+      setTimeout(() => fs.unlink(filePath).catch(() => {}), 10000);
+
+    } catch (e) {
+      await message.reaction("❌", event.messageID);
+      await message.reply(`❌ ${e.message}`);
+      if (filePath && fs.existsSync(filePath)) fs.unlink(filePath).catch(() => {});
     }
   }
 };
