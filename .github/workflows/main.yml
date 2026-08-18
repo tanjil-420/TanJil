@@ -91,16 +91,15 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: |
-  ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name | lower }}:latest
-  ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name | lower }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+       - name: Build and push Docker image
+         uses: docker/build-push-action@v4
+         with:
+           context: .
+           push: true
+           tags: ${{ steps.meta.outputs.tags }}
+           labels: ${{ steps.meta.outputs.labels }}
+           cache-from: type=gha
+           cache-to: type=gha,mode=max
 
       - name: Image details
         run: |
