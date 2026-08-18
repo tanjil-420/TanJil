@@ -1,276 +1,372 @@
+const mongoose = require("mongoose");
+const moment = require('moment-timezone');
+moment.tz.setDefault("Asia/Dhaka");
+
+const fruitIcons = ["🍒", "🍊", "🍋", "🍇", "🍓", "🍍"];
+const Globals = mongoose.model("globals");
+
 module.exports = {
   config: {
     name: "bank",
-    version: "3.0",
-    description: "Deposit, withdraw, earn interest, loan system, bet, service, details",
-    guide: {
-      vi: "",
-      en: `💫 Bank Commands 💫
-
-💖 bank - Show bank features
-💙 bank balance - Show your balance
-💛 bank deposit [amount] - Deposit money
-💜 bank withdraw [amount] - Withdraw money
-✨ bank interest - Earn double after 6h
-🌷 bank loan - Take a 20k loan
-😇 bank repay [amount] - Repay your loan
-😍 bank top - Top 10 richest users
-🖤 bank bet [amount] - Bet with bank balance
-🧾 bank service - Show all bank services (বাংলায়)
-📊 bank details - Show your banking details`
-    },
-    category: "game",
-    countDown: 1,
+    version: "1.6.9",
+    author: "Nazrul",
+    countDown: 5,
     role: 0,
-    author: "〲T A N J I L ツ"
+    description: "Banking Bot System for managing your balance, deposits, withdrawals, transfers, interest, betting, loans",
+    category: "bank",
+    guide: {
+      en: "💳 Banking Bot System for managing your balance, deposits, withdrawals, transfers, interest, betting, loans, and more.\n\n" +
+        "💸 Balance: `{pn} balance` or `{pn} bal`\n" +
+        "💵 Deposit: `{pn} deposit 100` or `{pn} dep 100`\n" +
+        "💸 Withdraw: `{pn} withdraw 50` or `{pn} wd 50`\n" +
+        "🎗️ Transfer: `{pn} transfer 200 [userID]` or `{pn} send 200 [userID]`\n" +
+        "🔖 Interest: `{pn} interest` or `{pn} int`\n" +
+        "🎰 Bet: `{pn} bet 100` or `{pn} gamble 100`\n" +
+        "🏆 Richest: `{pn} richest` or `{pn} top`\n" +
+        "💼 Services: `{pn} services` or `{pn} list`\n" +
+        "📋 All Users: `{pn} list` or `{pn} users`\n" +
+        "💳 Loan: `{pn} loan 5000` to borrow, `{pn} repay` to repay your loan\n\n" +
+        "⚡ Note: Each action updates your bank data, including transaction history and balance."
+    }
   },
 
-  onStart: async function ({ message, event, args, usersData, api }) {
-    const { MongoClient } = require("mongodb");
-    const uri = "mongodb+srv://tanjil4:tanjil4@cluster0.lqh9lyk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-    const client = new MongoClient(uri);
+  onStart: async function ({ args, message, event, usersData, api }) {
+    const BankName = "🏦 Cʜᴏᴄᴏʟᴀᴛʏ ᴮᴬᴺᴷ 🏦";
+    const userID = event.senderID;
+    const userMoney = await usersData.get(userID, "money");
 
-    try {
-      await client.connect();
-      const db = client.db("bankSystem");
-      const users = db.collection("users");
-      const uid = event.senderID;
-      const action = args[0]?.toLowerCase();
-      const amount = parseInt(args[1]);
+    let bankStats = await Globals.findOne({ key: "BankData" });
+    if (!bankStats) {
+      bankStats = await Globals.create({ key: "BankData", data: { users: {} } });
+    }
 
-      const prefix = "〲٭⃝🎀 ⃝𝐘𝐎𝐔𝐑 𝐁𝐀𝐁𝐘 ⃝🎀\n\n";
+    if (!bankStats.data.users[userID]) {
+      const userInfo = await usersData.get(userID);
+      const name = userInfo.name || "User";
+      bankStats.data.users[userID] = createUserData(name);
+      await updateBankData(bankStats);
+    }
 
-      const user = await users.findOneAndUpdate(
-        { uid },
-        {
-          $setOnInsert: {
-            balance: 0,
-            loan: 0,
-            lastInterest: Date.now(),
-            interestCount: 0,
-            interestProfit: 0,
-            joinedAt: Date.now()
-          }
-        },
-        { upsert: true, returnDocument: "after" }
-      );
+    await autoRepayLoan({ userID, usersData, bankStats, BankName, message });
 
-      const userData = user?.value;
+    const userName = bankStats.data.users[userID].name;
+    const command = args[0]?.toLowerCase();
+    const amount = parseInt(args[1]);
+    let recipientUID = args[2];
 
-      switch (action) {
-        case "balance":
-          return message.reply(`${prefix}💙 Your bank balance: ${userData.balance} $✨`);
+    switch (command) {
+      case "help":
+      case "h":
+        return sendHelpMessage(message, BankName);
 
-        case "deposit": {
-          if (!amount || amount <= 0)
-            return message.reply(`${prefix}🌷 Example: bank deposit 100`);
+      case "services":
+      case "service":
+      case "se":
+        return sendServiceList(message, BankName);
 
-          const currentMoney = await usersData.get(uid, "money") || 0;
-          if (currentMoney < amount)
-            return message.reply(`${prefix}❌ You don't have enough cash to deposit.`);
+      case "balance":
+      case "bal":
+        return handleBalance({ event, message, bankStats, userID, BankName });
 
-          await usersData.set(uid, "money", currentMoney - amount);
-          await users.updateOne({ uid }, { $inc: { balance: amount } });
+      case "deposit":
+      case "dep":
+        return handleDeposit({ amount, userMoney, message, bankStats, userID, userName, usersData, BankName });
 
-          return message.reply(`${prefix}💖 Deposited ${amount} $ successfully from your cash! 🏦`);
-        }
+      case "withdraw":
+      case "wd":
+        return handleWithdraw({ amount, message, bankStats, userID, userName, usersData, userMoney, BankName });
 
-        case "withdraw": {
-  if (!amount || amount <= 0) {
-    return message.reply("${prefix}💖 Please enter a valid amount to withdraw. 🤗");
-  }
+      case "transfer":
+      case "send":
+        return handleTransfer({ amount, recipientUID, userID, bankStats, message, userName, api, BankName, event });
 
-  const userData = user.value;
+      case "interest":
+      case "int":
+        return handleInterest({ message, bankStats, userID, userName, BankName });
 
-  if (amount > userData.balance) {
-    return message.reply("${prefix}🪽 Not enough balance in your bank! 😢");
-  }
+      case "richest":
+      case "top":
+        return showRichestUsers({ message, bankStats, BankName });
 
-  // 
-  await users.updateOne({ uid }, { $inc: { balance: -amount } });
+      case "bet":
+      case "gamble":
+      case "slot":
+        return handleBet({ amount, userMoney, message, bankStats, userID, usersData, BankName });
 
-  // usersData 
-  const currentMoney = await usersData.get(uid, "money") || 0;
+      case "users":
+      case "all":
+      case "list":
+        return listUsers({ message, bankStats, BankName });
 
-  // 
-  await usersData.set(uid, { money: currentMoney + amount });
+      case "loan":
+        return handleLoan({ amount, message, bankStats, userID, userName, usersData, BankName });
 
-  return message.reply(`${prefix}✅ You withdrew $${amount} successfully! 🎀`);
-}
+      case "repay":
+        return handleRepayLoan({ message, bankStats, userID, userName, usersData, BankName });
 
-        case "interest": {
-          const cooldown = 6 * 60 * 60 * 1000;
-          const now = Date.now();
-          const elapsed = now - userData.lastInterest;
-
-          if (elapsed < cooldown) {
-            const remaining = cooldown - elapsed;
-            const h = Math.floor(remaining / 3600000);
-            const m = Math.floor((remaining % 3600000) / 60000);
-            const s = Math.floor((remaining % 60000) / 1000);
-            return message.reply(`${prefix}🕒 Please wait ${h}h ${m}m ${s}s to claim interest again.`);
-          }
-
-          const earned = userData.balance * 2;
-          await users.updateOne(
-            { uid },
-            {
-              $inc: { balance: earned, interestCount: 1, interestProfit: earned },
-              $set: { lastInterest: now }
-            }
-          );
-
-          return message.reply(`${prefix}💸 You've earned $${earned} interest!`);
-        }
-
-        case "loan": {
-          if (userData.loan > 0)
-            return message.reply(`${prefix}👀 You already have a loan. Repay first.`);
-
-          await users.updateOne({ uid }, { $inc: { balance: 20000, loan: 20000 } });
-          return message.reply(`${prefix}😍 You received a loan of 20,000 $💸\n💫 Please repay within 3 days.`);
-        }
-
-        case "repay": {
-          if (!amount || amount <= 0)
-            return message.reply(`${prefix}💛 Example: bank repay 1000`);
-          if (userData.loan <= 0)
-            return message.reply(`${prefix}💙 You don’t have any active loans.`);
-          if (userData.balance < amount)
-            return message.reply(`${prefix}💫 Not enough balance to repay.`);
-
-          const repayAmount = Math.min(amount, userData.loan);
-          const remainingLoan = userData.loan - repayAmount;
-          await users.updateOne(
-            { uid },
-            { $inc: { loan: -repayAmount, balance: -repayAmount } }
-          );
-
-          return message.reply(`${prefix}💖 Repaid ${repayAmount} $. Remaining loan: ${remainingLoan} $`);
-        }
-
-        case "bet": {
-  if (!amount || isNaN(amount) || amount <= 0) {
-    return message.reply(`${prefix}❌ Invalid amount.\n📌 Example: /bank bet 100`);
-  }
-
-  if (userData.balance < amount) {
-    return message.reply(`${prefix}💸 You don't have enough balance to place this bet.`);
-  }
-
-  // 60% chance to lose
-  const didWin = Math.random() < 0.4; // 40% chance to win
-
-  // Weighted multipliers: more chance for 1.0–2.0 range
-  const weightedMultipliers = [
-    1.0, 1.0, 1.1, 1.1, 1.2, 1.2, 1.3, 1.3,
-    1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0,
-    2.5, 3.0, 3.5, 4.0, 5.0 // Rare big wins
-  ];
-  const multiplier = weightedMultipliers[Math.floor(Math.random() * weightedMultipliers.length)];
-
-  if (didWin) {
-    const winAmount = Math.floor(amount * multiplier);
-    await users.updateOne({ uid }, { $inc: { balance: winAmount } });
-    return message.reply(
-      `${prefix}🎉 You won the bet!\n💰 Bet: ${amount} $\n💸 Won: ${winAmount} $ (x${multiplier})`
-    );
-  } else {
-    await users.updateOne({ uid }, { $inc: { balance: -amount } });
-    return message.reply(
-      `${prefix}😓 You lost the bet.\n💰 Bet: ${amount} $\n💸 Lost: ${amount} $`
-    );
-  }
-}
-
-        case "service":
-          return message.reply(`${prefix}🔰 ব্যাংকের সকল সার্ভিস 🔰\n\n🏦 balance → ব্যাংকে জমাকৃত টাকা দেখতে পারবেন।\n💵 deposit [amount] → আপনার কাছে থাকা টাকা ব্যাংকে জমা দিতে পারবেন।\n🏧 withdraw [amount] → ব্যাংক থেকে টাকা তুলতে পারবেন (প্রতি ১০০০ টাকায় ৫০ টাকা চার্জ কাটা হয়)।\n⏳ interest → প্রতি ৬ ঘণ্টা পর আপনি আপনার ব্যালেন্স এর দ্বিগুণ সুদ পেতে পারেন।\n🏦 loan → একবারে ২০,০০০ টাকা লোন নিতে পারবেন।\n🔁 repay [amount] → আপনার লোন পরিশোধ করতে পারবেন।\n👑 top → ব্যাংকের শীর্ষ ১০ জন ব্যবহারকারীর তালিকা দেখবেন।\n🎀 topreset → সব ব্যবহারকারীর balance reset করা হয় (শুধুমাত্র owner ব্যবহার করতে পারবে)।\n🖤 bet [amount] → ব্যালেন্স থেকে টাকা বেট করতে পারবেন, জিতলে multiplier অনুযায়ী টাকা পাবেন।\n💻 details → আপনার ব্যাংক সংক্রান্ত বিস্তারিত তথ্য দেখাবে।`);
-
-        case "details": {
-  const uid = event.senderID;
-
-  const userInfo = await usersData.get(uid);
-  if (!userInfo) {
-    return message.reply("❌ User data not found. Please register first!");
-  }
-
-  const name = userInfo.name || "Unknown";
-  const balance = userInfo.balance ?? 0; // 🛠️ এখানে balance ঠিক করা হয়েছে
-  const betWon = userInfo.betWon ?? 0;
-  const betLost = userInfo.betLost ?? 0;
-  const joinDate = userInfo.joinedAt ? new Date(userInfo.joinedAt) : new Date();
-  const now = new Date();
-  const usedDays = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
-
-  const bdTime = now.toLocaleString("en-US", { 
-    timeZone: "Asia/Dhaka", 
-    hour12: true 
-  });
-
-  const response = 
-`📊 𝗕𝗔𝗡𝗞 𝗨𝗦𝗘𝗥 𝗜𝗡𝗙𝗢 📊
-
-👤 Name: ${name}
-🧾 UID: ${uid}
-💵 Balance: ${balance} $
-
-🏆 Total Wins in Bank Game: ${betWon}
-💥 Total Losses in Bank Game: ${betLost}
-
-🗓️ Days Active in Bank System: ${usedDays} day(s)
-
-📅 Current Date & Time (BD): ${bdTime}
-`;
-
-  return message.reply(response);
-}
-
-        case "topreset": {
-          const adminUID = "61579222525905";
-          if (event.senderID !== adminUID)
-            return message.reply(`${prefix}❌ You are not authorized to use this command.`);
-
-          const targetUID = args[1];
-          if (targetUID) {
-            const result = await users.updateOne({ uid: targetUID }, { $set: { balance: 0 } });
-            if (result.matchedCount === 0)
-              return message.reply(`${prefix}❌ No user found with UID: ${targetUID}`);
-            return message.reply(`${prefix}✅ User with UID ${targetUID}'s balance has been reset to 0.`);
-          } else {
-            const result = await users.updateMany({ balance: { $gt: 0 } }, { $set: { balance: 0 } });
-            return message.reply(`${prefix}✅ All users' bank balances have been reset to 0.\nAffected users: ${result.modifiedCount}`);
-          }
-        }
-
-        case "top": {
-          const topUsers = await users.find({ balance: { $gt: 0 } }).sort({ balance: -1 }).limit(10).toArray();
-
-          if (topUsers.length === 0)
-            return message.reply(`${prefix}😶 No top users found.`);
-
-          const formatNumber = num => num.toLocaleString();
-
-          let topMsg = `${prefix}👑 TOP 10 BANK USERS 👑\n\n`;
-
-          for (let i = 0; i < topUsers.length; i++) {
-            const u = topUsers[i];
-            try {
-              const userInfo = await api.getUserInfo(u.uid);
-              const name = userInfo[u.uid]?.name || "Unknown";
-              topMsg += `${i + 1}. ${name} (UID: ${u.uid})\n💵 Balance: ${formatNumber(u.balance)} $\n\n`;
-            } catch {
-              topMsg += `${i + 1}. Unknown (UID: ${u.uid})\n💵 Balance: ${formatNumber(u.balance)} $\n\n`;
-            }
-          }
-
-          return message.reply(topMsg.trim());
-        }
-
-        default:
-          return message.reply(`〲٭⃝🎀 ⃝𝐘𝐎𝐔𝐑 𝐁𝐀𝐁𝐘 𝐋𝐢𝐬𝐭 ⃝🎀٭⃝\n━━━━━━━━━━━━━━━━━━\n\n1.🏦 balance\n2.💵 deposit [amount]\n3.🏧 withdraw [amount]\n4.⏳ interest [2x]\n5.🏦 loan [only 20000]\n6.🔁 repay [amount]\n7.👑 top [10 richest user]\n8.🎀 topreset  [ only owner ]\n9.🖤 Bank bet [ 1k / 1000 ]\n10.🏦 Bank service\n11.💻 Details`);
-      }
-    } finally {
-      await client.close();
+      default:
+        return message.reply(`${BankName}\n\n🎀 Invalid command. Type "bank help" for a list of commands.`);
     }
   }
 };
+
+
+async function updateBankData(bankStats) {
+  await Globals.updateOne({ key: "BankData" }, { data: bankStats.data }, { upsert: true });
+}
+
+function createUserData(name) {
+  return {
+    name,
+    bank: 0,
+    loan: 0,
+    loanDate: null,
+    lastInterestClaimed: Date.now(),
+    lastTransactionDate: null,
+    totalDeposited: 0,
+    totalWithdrawn: 0,
+    transactionHistory: []
+  };
+}
+
+function sendHelpMessage(message, BankName) {
+  return message.reply(`${BankName}\n\n📜 Available Commands:\n\n1. 💸 balance\n2. 💵 deposit [amount]\n3. 💸 withdraw [amount]\n4. 🫂 transfer [amount] [userID]\n5. 🔖 interest\n6. 🏆 richest\n7. 🎰 bet [amount]\n8. 💳 loan [amount]\n9. 💳 repay\n10. 🏦 services\n11. 📜 users`);
+}
+
+function sendServiceList(message, BankName) {
+  return message.reply(`${BankName}\n\n📜 Available Banking Services:\n\n1. 💼 Savings Account\n2. 💸 Money Transfers\n3. 🎰 Betting\n4. 🔖 Interest Claims\n5. 💳 Loans\n6. 💰 Balance Management\n\n🔒 Your data is securely managed.`);
+}
+
+function listUsers({ message, bankStats, BankName }) {
+  const users = Object.entries(bankStats.data.users);
+  
+  if (users.length === 0) {
+    return message.reply(`${BankName}\n\n🎀 No users found in the bank system.`);
+  }
+
+  const userList = users
+    .map(([id, user], index) => `${index + 1}. ${user.name}: ${formatMoney(user.bank)}`)
+    .join("\n");
+
+  return message.reply(`${BankName}\n\n👑 Bank Users 👑:\n\n${userList}`);
+}
+
+async function handleLoan({ amount, message, bankStats, userID, userName, usersData, BankName }) {
+  const LOAN_LIMIT = 20000;
+  const user = bankStats.data.users[userID];
+  const userBalance = await usersData.get(userID, "money");
+
+  if (user.loan > 0) {
+    const dueTime = moment(user.loanDate).add(3, 'days').format('MMMM Do YYYY, h:mm:ss A');
+    return message.reply(`${BankName}\n\n🎀 ${userName}, you already have an outstanding loan of ${formatMoney(user.loan)}. Please repay it before ${dueTime}.`);
+  }
+
+  if (isNaN(amount) || amount <= 0 || amount > LOAN_LIMIT) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, you can only take a loan up to ${formatMoney(LOAN_LIMIT)}.`);
+  }
+
+  user.loan = amount;
+  user.loanDate = Date.now();
+  await usersData.set(userID, { money: userBalance + amount });
+  updateTransaction(user, "loan_taken", amount);
+
+  await updateBankData(bankStats);
+  return message.reply(`${BankName}\n\n🎀 ${userName}, you have successfully taken a loan of ${formatMoney(amount)}. Please repay it within 3 days.`);
+}
+
+async function handleRepayLoan({ message, bankStats, userID, userName, usersData, BankName }) {
+  const user = bankStats.data.users[userID];
+  const userMoney = await usersData.get(userID, "money");
+
+  if (user.loan === 0) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, you don't have any outstanding loans.`);
+  }
+
+  if (userMoney < user.loan) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, you don't have enough money to repay the loan of ${formatMoney(user.loan)}.`);
+  }
+
+  await usersData.set(userID, { money: userMoney - user.loan });
+  updateTransaction(user, "loan_repaid", user.loan);
+
+  user.loan = 0;
+  user.loanDate = null;
+  await updateBankData(bankStats);
+
+  return message.reply(`${BankName}\n\n🎀 ${userName}, you have successfully repaid your loan.`);
+}
+
+async function autoRepayLoan({ userID, usersData, bankStats, BankName, message }) {
+  const user = bankStats.data.users[userID];
+  const userMoney = await usersData.get(userID, "money");
+
+  if (user.loan > 0) {
+    const dueDate = moment(user.loanDate).add(3, 'days');
+    if (moment().isAfter(dueDate)) {
+      if (userMoney >= user.loan) {
+        await usersData.set(userID, { money: userMoney - user.loan });
+        updateTransaction(user, "loan_auto_repaid", user.loan);
+        user.loan = 0;
+        user.loanDate = null;
+        await updateBankData(bankStats);
+        message.reply(`${BankName}\n\n🎀 Your outstanding loan was automatically repaid from your balance.`);
+      } else {
+        message.reply(`${BankName}\n\n🎀 Your loan is overdue, but you don't have enough money for repayment. Please deposit funds.`);
+      }
+    }
+  }
+}
+
+function handleBalance({ event, message, bankStats, userID, BankName }) {
+  const targetID = event.messageReply?.senderID || Object.keys(event.mentions)[0] || userID;
+  const targetData = bankStats.data.users[targetID];
+
+  if (!targetData) {
+    return message.reply(`${BankName}\n\n🎀 No bank data found for the user.`);
+  }
+
+  return message.reply(`${BankName}\n\n🎀 ${targetData.name}'s bank balance is ${formatMoney(targetData.bank)}.`);
+}
+
+async function handleDeposit({ amount, userMoney, message, bankStats, userID, userName, usersData, BankName }) {
+  if (userMoney === 0) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, your wallet is empty. Earn or receive money before depositing.`);
+  }
+
+  if (isNaN(amount) || amount <= 0 || userMoney < amount) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, you don't have enough money to deposit this amount.`);
+  }
+
+  bankStats.data.users[userID].bank += amount;
+  bankStats.data.users[userID].totalDeposited += amount;
+  updateTransaction(bankStats.data.users[userID], "deposit", amount);
+  
+  await usersData.set(userID, { money: userMoney - amount });
+  await updateBankData(bankStats);
+
+  return message.reply(`${BankName}\n\n🎀 ${userName}, you successfully deposited ${formatMoney(amount)} into your bank account.`);
+}
+
+async function handleWithdraw({ amount, message, bankStats, userID, userName, usersData, userMoney, BankName }) {
+  const balance = bankStats.data.users[userID].bank;
+
+  if (balance === 0) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, your bank balance is zero. Deposit money first.`);
+  }
+
+  if (isNaN(amount) || amount <= 0 || amount > balance) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, insufficient bank balance to withdraw ${formatMoney(amount)}.`);
+  }
+
+  bankStats.data.users[userID].bank -= amount;
+  bankStats.data.users[userID].totalWithdrawn += amount;
+  updateTransaction(bankStats.data.users[userID], "withdraw", amount);
+
+  await usersData.set(userID, { money: userMoney + amount });
+  await updateBankData(bankStats);
+
+  return message.reply(`${BankName}\n\n🎀 ${userName}, you withdrew ${formatMoney(amount)} successfully from your bank account.`);
+}
+
+async function handleTransfer({ amount, recipientUID, userID, bankStats, message, userName, api, BankName, event }) {
+  recipientUID = getRecipientUID(event, recipientUID);
+
+  if (!recipientUID) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, please mention a user, reply to a user's message, or provide a valid user ID to transfer money.`);
+  }
+
+  if (isNaN(amount) || amount <= 0 || bankStats.data.users[userID].bank < amount) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, invalid transfer details or insufficient funds.`);
+  }
+
+  if (userID === recipientUID) {
+    return message.reply(`${BankName}\n\n🎀 ${userName}, you cannot transfer money to yourself.`);
+  }
+
+  if (!bankStats.data.users[recipientUID]) {
+    const recipientInfo = await api.getUserInfo(recipientUID);
+    const recipientName = recipientInfo[recipientUID]?.firstName || "Darling";
+    bankStats.data.users[recipientUID] = createUserData(recipientName);
+  }
+
+  bankStats.data.users[userID].bank -= amount;
+  updateTransaction(bankStats.data.users[userID], "transfer", amount, recipientUID);
+
+  bankStats.data.users[recipientUID].bank += amount;
+  updateTransaction(bankStats.data.users[recipientUID], "received", amount, userID);
+
+  await updateBankData(bankStats);
+
+  const recipientName = bankStats.data.users[recipientUID].name;
+  return message.reply(`${BankName}\n\n🎀 ${userName}, you transferred ${formatMoney(amount)} to ${recipientName}.`);
+}
+
+function getRecipientUID(event, recipientUID) {
+  if (event.messageReply) return event.messageReply.senderID;
+  if (Object.keys(event.mentions).length > 0) return Object.keys(event.mentions)[0];
+  if (!isNaN(recipientUID)) return recipientUID;
+  return null;
+}
+
+function handleInterest({ message, bankStats, userID, userName, BankName }) {
+  const interestRate = 0.0001;
+  const lastClaimed = bankStats.data.users[userID].lastInterestClaimed;
+  const timeElapsed = (Date.now() - lastClaimed) / (1000 * 60 * 60 * 24);
+  const interestEarned = bankStats.data.users[userID].bank * interestRate * timeElapsed;
+
+  bankStats.data.users[userID].bank += interestEarned;
+  bankStats.data.users[userID].lastInterestClaimed = Date.now();
+  updateTransaction(bankStats.data.users[userID], "interest", interestEarned);
+
+  updateBankData(bankStats);
+  return message.reply(`${BankName}\n\n🎀 ${userName}, you earned ${formatMoney(interestEarned)} in interest.`);
+}
+
+function showRichestUsers({ message, bankStats, BankName }) {
+  const richestUsers = Object.entries(bankStats.data.users)
+    .sort(([, a], [, b]) => b.bank - a.bank)
+    .slice(0, 10)
+    .map(([id, user], index) => `${index + 1}. ${user.name}: ${formatMoney(user.bank)}`)
+    .join("\n");
+
+  return message.reply(`${BankName}\n\n👑 Top 10 Richest Users 👑:\n\n${richestUsers}`);
+}
+
+async function handleBet({ amount, userMoney, message, bankStats, userID, usersData, BankName }) {
+  if (isNaN(amount) || amount <= 0 || userMoney < amount) {
+    return message.reply(`${BankName}\n\n🎀 Invalid bet amount.`);
+  }
+
+  const slots = Array.from({ length: 3 }, () => fruitIcons[Math.floor(Math.random() * fruitIcons.length)]);
+  const multiplier = slots.every(s => s === slots[0]) ? 3 : slots[0] === slots[1] || slots[1] === slots[2] || slots[0] === slots[2] ? 2 : 0;
+  const winnings = amount * multiplier;
+
+  await usersData.set(userID, { money: userMoney - amount + winnings });
+  updateTransaction(bankStats.data.users[userID], multiplier ? "bet_win" : "bet_loss", winnings || -amount);
+  
+  await updateBankData(bankStats);
+  
+  return message.reply(`${BankName}\n\n ${slots.join(" ")}\n\n🎀 ${multiplier ? `You won ${formatMoney(winnings)}!` : `You lost ${formatMoney(amount)}.`}`);
+}
+
+function updateTransaction(userData, type, amount, counterpartID = null) {
+  userData.lastTransactionDate = new Date().toISOString();
+  const transaction = { type, amount, date: new Date().toISOString() };
+  if (counterpartID) transaction.counterpartID = counterpartID;
+  userData.transactionHistory.push(transaction);
+}
+
+function formatMoney(amount) {
+  if (amount >= 1e33) return (amount / 1e33).toFixed(2).replace(/\.00$/, '') + 'Dc';
+  if (amount >= 1e30) return (amount / 1e30).toFixed(2).replace(/\.00$/, '') + 'No';
+  if (amount >= 1e27) return (amount / 1e27).toFixed(2).replace(/\.00$/, '') + 'Oc';
+  if (amount >= 1e24) return (amount / 1e24).toFixed(2).replace(/\.00$/, '') + 'Sp';
+  if (amount >= 1e21) return (amount / 1e21).toFixed(2).replace(/\.00$/, '') + 'Sx';
+  if (amount >= 1e18) return (amount / 1e18).toFixed(2).replace(/\.00$/, '') + 'Qi';
+  if (amount >= 1e15) return (amount / 1e15).toFixed(2).replace(/\.00$/, '') + 'Qa';
+  if (amount >= 1e12) return (amount / 1e12).toFixed(2).replace(/\.00$/, '') + 'T';
+  if (amount >= 1e9) return (amount / 1e9).toFixed(2).replace(/\.00$/, '') + 'B';
+  if (amount >= 1e6) return (amount / 1e6).toFixed(2).replace(/\.00$/, '') + 'M';
+  if (amount >= 1e3) return (amount / 1e3).toFixed(2).replace(/\.00$/, '') + 'K';
+  return amount.toString() + '💵';
+}
