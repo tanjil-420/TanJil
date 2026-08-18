@@ -89,9 +89,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
-          flavor: |
-            lower=true
+          images: ghcr.io/${{ lower(github.repository) }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -105,7 +106,7 @@ jobs:
 
       - name: Image details
         run: |
-          echo "Image published successfully!"
+          echo "Image published successfully to GHCR!"
 
   notes:
     name: Notes about 24/7 running
