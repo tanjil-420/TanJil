@@ -1,7 +1,7 @@
 module.exports = {
   config: {
-    name: "c",
-    aliases: [],
+    name: "clearmessage",
+    aliases: ["clear","clean","c"],
     author: "kshitiz",  
     version: "2.0",
     cooldowns: 5,
@@ -23,7 +23,7 @@ module.exports = {
       const threadID = event.threadID;
 
 
-      const botMessages = await api.getThreadHistory(threadID, 100); // Adjust the limit as needed 50 = 50 msg
+      const botMessages = await api.getThreadHistory(threadID, 50); // Adjust the limit as needed 50 = 50 msg
 
 
       const botSentMessages = botMessages.filter(message => message.senderID === api.getCurrentUserID());
