@@ -6,7 +6,7 @@ const baseApiUrl = async () => {
   return base.data.api;
 };
 module.exports.config = {
-    name: 'font3',
+    name: 'font2',
     aliases: ['style'],
     version: '1.0',
     role: 0,
