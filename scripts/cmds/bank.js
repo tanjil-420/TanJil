@@ -13,7 +13,7 @@ module.exports = {
     countDown: 5,
     role: 0,
     description: "Banking Bot System for managing your balance, deposits, withdrawals, transfers, interest, betting, loans",
-    category: "bank",
+    category: "economy",
     guide: {
       en: "💳 Banking Bot System for managing your balance, deposits, withdrawals, transfers, interest, betting, loans, and more.\n\n" +
         "💸 Balance: `{pn} balance` or `{pn} bal`\n" +
