@@ -31,8 +31,8 @@ const SUPPORTED = [
 module.exports = {
   config: {
     name: "autodl",
-    version: "6.6",
-    author: "Toshiro Editz",
+    version: "7.0",
+    author: "T A N J I L 🎀",
     role: 0,
     category: "media",
     description: { en: "Advanced multi-platform video downloader" },
@@ -55,7 +55,7 @@ module.exports = {
       const filePath = path.join(cacheDir, `dl_${Date.now()}.mp4`);
 
       const res = await axios.get(
-        `https://toshiro-editz-api.vercel.app/downloader/alldl?url=${encodeURIComponent(text)}`,
+        `https://personal-autodl-api.onrender.com/downloader/alldl?url=${encodeURIComponent(text)}`,
         { timeout: 30000 }
       );
 
