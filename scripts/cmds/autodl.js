@@ -2,94 +2,631 @@ const axios = require("axios");
 const fs = require("fs-extra");
 const path = require("path");
 
+/* =========================================================
+ *                    AUTO DL CONFIG
+ * ========================================================= */
+
+const CONFIG = {
+  API_URL: "https://personal-autodl-api.onrender.com/alldl",
+
+  CACHE_DIR: path.join(__dirname, "cache"),
+
+  TIMEOUT: {
+    API: 45000,
+    VIDEO: 60000
+  },
+
+  USER_AGENT:
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+    "AppleWebKit/537.36 (KHTML, like Gecko) " +
+    "Chrome/110.0.0.0 Safari/537.36",
+
+  REACTIONS: {
+    LOADING: "⏳",
+    DOWNLOADING: "📥",
+    PROCESSING: "⚡",
+    SUCCESS: "✅",
+    WARNING: "⚠️",
+    ERROR: "❌"
+  }
+};
+
+
+/* =========================================================
+ *                    PLATFORM DETECTOR
+ * ========================================================= */
+
 function detectPlatform(url) {
-  if (url.includes("tiktok.com")) return "TikTok";
-  if (url.includes("facebook.com") || url.includes("fb.watch")) return "Facebook";
-  if (url.includes("instagram.com")) return "Instagram";
-  if (url.includes("youtube.com") || url.includes("youtu.be")) return "YouTube";
-  if (url.includes("x.com") || url.includes("twitter.com")) return "Twitter / X";
-  if (url.includes("pin.it") || url.includes("pinterest.com")) return "Pinterest";
+  if (/tiktok\.com/i.test(url))
+    return "TikTok";
+
+  if (/facebook\.com|fb\.watch|fb\.com/i.test(url))
+    return "Facebook";
+
+  if (/instagram\.com|instagr\.am/i.test(url))
+    return "Instagram";
+
+  if (/youtube\.com|youtu\.be/i.test(url))
+    return "YouTube";
+
+  if (/x\.com|twitter\.com/i.test(url))
+    return "Twitter / X";
+
+  if (/pin\.it|pinterest\.com/i.test(url))
+    return "Pinterest";
+
   return "Unknown";
 }
 
-function extractVideo(data) {
-  if (!data) return null;
-  const r = data.result || {};
-  return (
-    r.high_quality || r.video || r.url || data.high_quality || data.video || data.url || null
+
+/* =========================================================
+ *                    SUPPORTED URL CHECK
+ * ========================================================= */
+
+function isSupportedUrl(url) {
+  return /tiktok\.com|facebook\.com|fb\.watch|fb\.com|instagram\.com|instagr\.am|youtube\.com|youtu\.be|x\.com|twitter\.com|pin\.it|pinterest\.com/i.test(
+    url
   );
 }
 
-const SUPPORTED = [
-  "https://vt.tiktok.com", "https://www.tiktok.com/", "https://vm.tiktok.com",
-  "https://www.facebook.com/watch/", "https://www.facebook.com/reel/",
-  "https://www.facebook.com/share/v", "https://www.facebook.com/share/r",
-  "https://www.instagram.com/reel/", "https://youtu.be/", "https://youtube.com/",
-  "https://x.com/", "https://twitter.com/", "https://pin.it/", "https://www.pinterest.com/"
-];
+
+/* =========================================================
+ *                    URL EXTRACTOR
+ * ========================================================= */
+
+function findSupportedUrl(text) {
+  if (!text) return null;
+
+  const urlRegex = /(https?:\/\/[^\s]+)/gi;
+  const matches = text.match(urlRegex);
+
+  if (!matches) return null;
+
+  return (
+    matches.find(url => isSupportedUrl(url)) || null
+  );
+}
+
+
+/* =========================================================
+ *                    REACTION HANDLER
+ * ========================================================= */
+
+function setReaction(api, messageID, reaction, threadID) {
+  try {
+    api.setMessageReaction(
+      reaction,
+      messageID,
+      threadID,
+      () => {},
+      true
+    );
+  } catch (error) {
+    console.error(
+      `[AutoDL Reaction Error] ${error.message}`
+    );
+  }
+}
+
+
+/* =========================================================
+ *                    FILE CLEANUP
+ * ========================================================= */
+
+async function cleanup(filePath) {
+  try {
+    if (await fs.pathExists(filePath)) {
+      await fs.remove(filePath);
+    }
+  } catch (error) {
+    console.error(
+      `[AutoDL Cleanup Error] ${error.message}`
+    );
+  }
+}
+
+
+/* =========================================================
+ *                    MODULE
+ * ========================================================= */
 
 module.exports = {
+
   config: {
     name: "autodl",
-    version: "7.0",
-    author: "T A N J I L 🎀",
+    version: "9.0",
+    author: "TanJil.4x",
+
     role: 0,
     category: "media",
-    description: { en: "Advanced multi-platform video downloader" },
-    guide: { en: "[video link]" }
+
+    description: {
+      en: "Automatically download videos from supported social media links."
+    },
+
+    guide: {
+      en: "[video link]"
+    }
   },
 
-  onStart: async function () {},
 
-  onChat: async function ({ api, event }) {
-    const text = event.body ? event.body.trim() : "";
-    if (!text.startsWith("http")) return;
-    if (!SUPPORTED.some(link => text.startsWith(link))) return;
+  /* =======================================================
+   *                    COMMAND HANDLER
+   * ======================================================= */
 
-    api.setMessageReaction("📥", event.messageID, () => {}, true);
-    const startTime = Date.now();
+  onStart: async function ({ api, event, args }) {
 
-    try {
-      const cacheDir = path.join(__dirname, "cache");
-      await fs.ensureDir(cacheDir);
-      const filePath = path.join(cacheDir, `dl_${Date.now()}.mp4`);
+    const link =
+      args[0] ||
+      findSupportedUrl(event.body || "");
 
-      const res = await axios.get(
-        `https://personal-autodl-api.onrender.com/downloader/alldl?url=${encodeURIComponent(text)}`,
-        { timeout: 30000 }
+    if (!link) {
+
+      setReaction(
+        api,
+        event.messageID,
+        CONFIG.REACTIONS.WARNING,
+        event.threadID
       );
 
-      const downloadUrl = extractVideo(res.data);
-      if (!downloadUrl) {
-        api.setMessageReaction("⚠️", event.messageID, () => {}, true);
-        return;
+      return api.sendMessage(
+        "⚠️ Please provide a valid supported video link.",
+        event.threadID,
+        event.messageID
+      );
+    }
+
+    await this.handleDownload({
+      api,
+      event,
+      targetUrl: link
+    });
+  },
+
+
+  /* =======================================================
+   *                    AUTO LINK DETECTOR
+   * ======================================================= */
+
+  onChat: async function ({ api, event }) {
+
+    const body = event.body
+      ? event.body.trim()
+      : "";
+
+    // Ignore bot commands
+    if (
+      body.startsWith("/") ||
+      body.startsWith("!") ||
+      body.startsWith(".")
+    ) {
+      return;
+    }
+
+    const targetUrl =
+      findSupportedUrl(body);
+
+    if (!targetUrl) return;
+
+    await this.handleDownload({
+      api,
+      event,
+      targetUrl
+    });
+  },
+
+
+  /* =======================================================
+   *                    MAIN DOWNLOAD HANDLER
+   * ======================================================= */
+
+  handleDownload: async function ({
+    api,
+    event,
+    targetUrl
+  }) {
+
+    const startTime = Date.now();
+
+    const platform =
+      detectPlatform(targetUrl);
+
+    const filePath = path.join(
+      CONFIG.CACHE_DIR,
+      `autodl_${Date.now()}_${Math.random()
+        .toString(36)
+        .substring(2, 8)}.mp4`
+    );
+
+
+    try {
+
+      /* ===================================================
+       * STEP 1 — LOADING
+       * =================================================== */
+
+      setReaction(
+        api,
+        event.messageID,
+        CONFIG.REACTIONS.LOADING,
+        event.threadID
+      );
+
+
+      /* ===================================================
+       * CREATE CACHE DIRECTORY
+       * =================================================== */
+
+      await fs.ensureDir(
+        CONFIG.CACHE_DIR
+      );
+
+
+      /* ===================================================
+       * STEP 2 — API PROCESSING
+       * =================================================== */
+
+      setReaction(
+        api,
+        event.messageID,
+        CONFIG.REACTIONS.DOWNLOADING,
+        event.threadID
+      );
+
+
+      const apiUrl =
+        `${CONFIG.API_URL}?url=${encodeURIComponent(targetUrl)}`;
+
+
+      /* ===================================================
+       * API REQUEST
+       * =================================================== */
+
+      const response = await axios.get(
+        apiUrl,
+        {
+          timeout: CONFIG.TIMEOUT.API,
+          headers: {
+            "User-Agent": CONFIG.USER_AGENT
+          }
+        }
+      );
+
+
+      /* ===================================================
+       * VALIDATE RESPONSE
+       * =================================================== */
+
+      if (
+        !response.data ||
+        !response.data.success ||
+        !response.data.url
+      ) {
+
+        setReaction(
+          api,
+          event.messageID,
+          CONFIG.REACTIONS.WARNING,
+          event.threadID
+        );
+
+        const errorMessage =
+          response.data?.message ||
+          "Unable to extract the video link.";
+
+        return api.sendMessage(
+`╭━━━〔 ⚠️ AUTO DOWNLOADER 〕━━━╮
+
+⚠️ ${errorMessage}
+
+🎬 Platform : ${platform}
+
+╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯`,
+          event.threadID,
+          event.messageID
+        );
       }
 
-      const response = await axios.get(downloadUrl, {
-        responseType: "arraybuffer",
-        timeout: 45000
-      });
 
-      await fs.writeFile(filePath, Buffer.from(response.data));
+      /* ===================================================
+       * GET VIDEO URL
+       * =================================================== */
 
-      const info = res.data.result || res.data;
-      const platform = detectPlatform(text);
-      const latency = ((Date.now() - startTime) / 1000).toFixed(2);
+      const videoDownloadUrl =
+        response.data.url;
 
-      const message = {
-        body: `⚡ Auto-Downloader\n\nTitle: ${info.title || "Untitled"}\nPlatform: ${platform}\nAuthor: ${info.author || "N/A"}\nLatency: ${latency}s\n\n- Dev by TanJil.4x`,
-        attachment: fs.createReadStream(filePath)
-      };
 
-      api.sendMessage(message, event.threadID, (err) => {
-        if (err) console.error("Upload Error:", err);
-        api.setMessageReaction("✅", event.messageID, () => {}, true);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-      }, event.messageID);
+      /* ===================================================
+       * STEP 3 — PROCESSING
+       * =================================================== */
 
-    } catch (err) {
-      console.error("AutoDL Error:", err);
-      api.setMessageReaction("❌", event.messageID, () => {}, true);
+      setReaction(
+        api,
+        event.messageID,
+        CONFIG.REACTIONS.PROCESSING,
+        event.threadID
+      );
+
+
+      /* ===================================================
+       * VIDEO DOWNLOAD
+       * =================================================== */
+
+      const videoResponse =
+        await axios({
+          method: "GET",
+
+          url: videoDownloadUrl,
+
+          responseType: "stream",
+
+          timeout: CONFIG.TIMEOUT.VIDEO,
+
+          headers: {
+            "User-Agent":
+              CONFIG.USER_AGENT
+          }
+        });
+
+
+      const writer =
+        fs.createWriteStream(
+          filePath
+        );
+
+
+      videoResponse.data.pipe(
+        writer
+      );
+
+
+      await new Promise(
+        (resolve, reject) => {
+
+          writer.on(
+            "finish",
+            resolve
+          );
+
+          writer.on(
+            "error",
+            reject
+          );
+
+          videoResponse.data.on(
+            "error",
+            reject
+          );
+        }
+      );
+
+
+      /* ===================================================
+       * CALCULATE LATENCY
+       * =================================================== */
+
+      const latency =
+        (
+          (Date.now() - startTime) /
+          1000
+        ).toFixed(2);
+
+
+      /* ===================================================
+       * API INFORMATION
+       * =================================================== */
+
+      const platformName =
+        response.data.platform ||
+        platform;
+
+      const developer =
+        response.data.dev ||
+        "TanJil.4x";
+
+      const title =
+        response.data.title ||
+        null;
+
+      const author =
+        response.data.author ||
+        response.data.uploader ||
+        null;
+
+
+      /* ===================================================
+       * STEP 4 — SUCCESS REACTION
+       * =================================================== */
+
+      setReaction(
+        api,
+        event.messageID,
+        CONFIG.REACTIONS.SUCCESS,
+        event.threadID
+      );
+
+
+      /* ===================================================
+       * FINAL OUTPUT
+       * =================================================== */
+
+      let output =
+`╭━━━〔 ⚡ AUTO DOWNLOADER 〕━━━╮
+
+🎬 Platform  : ${platformName}
+⚡ Status    : Downloaded Successfully
+⏱️ Latency   : ${latency}s`;
+
+      if (title) {
+        output +=
+          `\n🎞️ Title     : ${title}`;
+      }
+
+      if (author) {
+        output +=
+          `\n👤 Author    : ${author}`;
+      }
+
+      output +=
+`
+👨‍💻 Developer : ${developer}
+
+╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯`;
+
+
+      /* ===================================================
+       * SEND VIDEO
+       * =================================================== */
+
+      api.sendMessage(
+        {
+          body: output,
+
+          attachment:
+            fs.createReadStream(
+              filePath
+            )
+        },
+
+        event.threadID,
+
+        async (error) => {
+
+          if (error) {
+
+            console.error(
+              "[AutoDL Upload Error]",
+              error
+            );
+
+            setReaction(
+              api,
+              event.messageID,
+              CONFIG.REACTIONS.ERROR,
+              event.threadID
+            );
+
+            await api.sendMessage(
+              "❌ Failed to send the video attachment.",
+              event.threadID,
+              event.messageID
+            );
+
+          }
+
+          else {
+
+            console.log(
+              `[AutoDL] ${platformName} downloaded successfully in ${latency}s`
+            );
+          }
+
+
+          /* =============================================
+           * DELETE CACHE FILE
+           * ============================================= */
+
+          await cleanup(
+            filePath
+          );
+        },
+
+        event.messageID
+      );
+
+    }
+
+
+    /* =====================================================
+     *                    ERROR HANDLER
+     * ===================================================== */
+
+    catch (error) {
+
+      console.error(
+        "[AutoDL Error]",
+        error
+      );
+
+
+      /* ===================================================
+       * ERROR REACTION
+       * =================================================== */
+
+      setReaction(
+        api,
+        event.messageID,
+        CONFIG.REACTIONS.ERROR,
+        event.threadID
+      );
+
+
+      let errorMessage =
+        "Download failed. Please try again.";
+
+
+      /* ===================================================
+       * ERROR TYPES
+       * =================================================== */
+
+      if (
+        error.code ===
+        "ECONNABORTED"
+      ) {
+
+        errorMessage =
+          "Request timed out. Please try again.";
+      }
+
+      else if (
+        error.response?.status === 404
+      ) {
+
+        errorMessage =
+          "Video link is unavailable or expired.";
+      }
+
+      else if (
+        error.response?.status === 429
+      ) {
+
+        errorMessage =
+          "Too many requests. Please try again later.";
+      }
+
+      else if (
+        error.response?.status >= 500
+      ) {
+
+        errorMessage =
+          "Download server is currently unavailable.";
+      }
+
+
+      /* ===================================================
+       * ERROR OUTPUT
+       * =================================================== */
+
+      await api.sendMessage(
+`╭━━━〔 ❌ AUTO DOWNLOADER 〕━━━╮
+
+❌ ${errorMessage}
+
+🎬 Platform : ${platform}
+
+╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯`,
+        event.threadID,
+        event.messageID
+      );
+
+
+      /* ===================================================
+       * CLEANUP
+       * =================================================== */
+
+      await cleanup(
+        filePath
+      );
     }
   }
 };
