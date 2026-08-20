@@ -1,6 +1,6 @@
 module.exports = {
   config: {
-    name: "spy",
+    name: "spy2",
     version: "4.0",
     author: "T A N J I L 🎀",
     countDown: 5,
