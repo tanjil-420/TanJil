@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   config: {
     name: "doubleguess",
-    aliases: ["dg"],
+    aliases: ["dg","diamondgame","dgame"],
     version: "1.4",
     author: "T A N J I L 🎀",
     role: 0,
