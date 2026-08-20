@@ -1,3 +1,8 @@
+const {
+  getUser,
+  setUser
+} = require("../utils/dataStore");
+
 module.exports = {
   config: {
     name: "spin",
@@ -23,19 +28,19 @@ module.exports = {
   },
   onStart: async function ({ args, message, event, usersData, getLang }) {
     const { senderID } = event;
-    const userData = await usersData.get(senderID);
+    const userData = await getUser(usersData, senderID);
     const amount = parseInt(args[0]);
 
     if (isNaN(amount) || amount <= 0) {
       return message.reply(getLang("invalid_amount"));
     }
 
-    if (amount > userData.money) {
+    if (amount > Number(userData.money || 0)) {
       return message.reply(getLang("not_enough_money"));
     }
 
-    const chance = Math.random(); // 0.0 - 1.0
-    let isWin = chance < 0.6; // 60% chance to win
+    const chance = Math.random();
+    let isWin = chance < 0.6;
 
     const slots = ["💚", "💛", "💙"];
     const slot1 = slots[Math.floor(Math.random() * slots.length)];
@@ -43,9 +48,10 @@ module.exports = {
     const slot3 = slots[Math.floor(Math.random() * slots.length)];
 
     const winnings = calculateWinnings(slot1, slot2, slot3, amount, isWin);
+    const newBalance = Number(userData.money || 0) + winnings;
 
-    await usersData.set(senderID, {
-      money: userData.money + winnings,
+    await setUser(usersData, senderID, {
+      money: newBalance.toString(),
       data: userData.data,
     });
 
@@ -73,15 +79,28 @@ function calculateWinnings(slot1, slot2, slot3, betAmount, isWin) {
 }
 
 function getSpinResultMessage(slot1, slot2, slot3, winnings, getLang, amount) {
-  const result = `╭──• SPIN •──╮\n│\n│   💰 Amount: $${amount}\n│\n├──────────────\n│   🎰 Result: [ ${slot1} | ${slot2} | ${slot3} ]\n╰──────────────╯`;
+  const result = `╭──• SPIN •──╮\n│\n│   💰 Amount: $${formatNumber(amount)}\n│\n├──────────────\n│   🎰 Result: [ ${slot1} | ${slot2} | ${slot3} ]\n╰──────────────╯`;
 
   if (winnings > 0) {
     if (slot1 === "💙" && slot2 === "💙" && slot3 === "💙") {
-      return `${getLang("jackpot_message", winnings, "💙")}\n${result}`;
+      return `${getLang("jackpot_message", formatNumber(winnings), "💙")}\n${result}`;
     } else {
-      return `${getLang("win_message", winnings)}\n${result}`;
+      return `${getLang("win_message", formatNumber(winnings))}\n${result}`;
     }
   } else {
-    return `${getLang("lose_message", -winnings)}\n${result}`;
+    return `${getLang("lose_message", formatNumber(-winnings))}\n${result}`;
   }
+}
+
+function formatNumber(num) {
+  const units = ["", "K", "M", "B", "T", "Q", "Qi", "Sx", "Sp", "Oc", "N", "D"];
+  let unit = 0;
+  let number = Number(num);
+
+  while (number >= 1000 && unit < units.length - 1) {
+    number /= 1000;
+    unit++;
+  }
+
+  return `${number.toFixed(2)}${units[unit]}`;
 }
