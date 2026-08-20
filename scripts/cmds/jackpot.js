@@ -1,3 +1,5 @@
+const { getUser, setUser } = require("../utils/dataStore");
+
 module.exports = {
   config: {
     name: "jackpot",
@@ -18,53 +20,70 @@ module.exports = {
   onStart: async function ({ args, message, event, usersData, getLang }) {
     const { senderID } = event;
     const input = args[0]?.toLowerCase();
-    if (!input) return message.reply("⚠️ Please provide your bet amount. Example: /bet 1M");
+
+    if (!input) {
+      return message.reply("⚠️ Please provide your bet amount. Example: /jackpot 1M");
+    }
 
     function parseAmount(str) {
       const units = {
-        k: 1e3, m: 1e6, b: 1e9, t: 1e12,
-        q: 1e15, qi: 1e18, sx: 1e21,
-        sp: 1e24, oc: 1e27, n: 1e30, dc: 1e33
+        k: 1e3,
+        m: 1e6,
+        b: 1e9,
+        t: 1e12,
+        q: 1e15,
+        qi: 1e18,
+        sx: 1e21,
+        sp: 1e24,
+        oc: 1e27,
+        n: 1e30,
+        dc: 1e33
       };
+
       const regex = /^(\d+(\.\d+)?)([a-z]{0,2})$/;
       const match = str.match(regex);
+
       if (!match) return null;
 
       const [_, num, __, unit] = match;
-      const lowerUnit = unit.toLowerCase();
-      const multiplier = units[lowerUnit] || 1;
+      const multiplier = units[unit.toLowerCase()] || 1;
+
       return parseFloat(num) * multiplier;
     }
 
     const bet = parseAmount(input);
-    if (!bet || bet < 1) return message.reply(getLang("invalid_amount"));
 
-    const userData = await usersData.get(senderID);
-    let balance = userData.money || 0;
+    if (!bet || bet < 1) {
+      return message.reply(getLang("invalid_amount"));
+    }
 
-    if (balance < bet) return message.reply(getLang("not_enough_money"));
+    const userData = await getUser(usersData, senderID);
+    let balance = Number(userData.money || 0);
+
+    if (balance < bet) {
+      return message.reply(getLang("not_enough_money"));
+    }
 
     const name = userData.name || "User";
-    let result = "";
+
     let win = false;
     let winAmount = 0;
     let finalMultiplier = 1.0;
 
     const chance = Math.random();
-if (chance <= 0.3) {
-  win = true;
-  finalMultiplier = parseFloat((Math.random() * 2 + 1).toFixed(1)); // 1.0x to 3.0x
-  winAmount = bet * finalMultiplier;
-  balance += winAmount;
-} else {
-  win = false;
-  winAmount = -bet;
-  balance += winAmount;
-}
 
-    await usersData.set(senderID, {
-      money: balance,
-      data: userData.data,
+    if (chance <= 0.3) {
+      win = true;
+      finalMultiplier = parseFloat((Math.random() * 2 + 1).toFixed(1));
+      winAmount = bet * finalMultiplier;
+      balance += winAmount;
+    } else {
+      winAmount = -bet;
+      balance += winAmount;
+    }
+
+    await setUser(usersData, senderID, {
+      money: balance
     });
 
     const format = (n) => {
@@ -79,18 +98,19 @@ if (chance <= 0.3) {
       if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
       if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
       if (n >= 1e3) return (n / 1e3).toFixed(2) + "K";
-      return n.toFixed(2);
+      return Number(n).toFixed(2);
     };
 
-    result = `╭──────────────\n` +
-             `│\n` +
-             `│     ✨${name}✨\n` +
-             `│\n` +
-             `│   ${win ? "🎀 YoU WiN 🎀" : "💔 YoU LoST 💔"}\n` +
-             `│  your bet amount : $${format(bet)}\n` +
-             `│  your balance : $${format(balance)}\n` +
-             `│\n` +
-             `╰──────────────`;
+    const result =
+      `╭──────────────\n` +
+      `│\n` +
+      `│     ✨${name}✨\n` +
+      `│\n` +
+      `│   ${win ? "🎀 YoU WiN 🎀" : "💔 YoU LoST 💔"}\n` +
+      `│  your bet amount : $${format(bet)}\n` +
+      `│  your balance : $${format(balance)}\n` +
+      `│\n` +
+      `╰──────────────`;
 
     return message.reply(result);
   }
