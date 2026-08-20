@@ -1,7 +1,7 @@
 module.exports = {
   config: {
     name: "supportgroup",
-    aliases: ["sgc", "support gc", "sgroup"],
+    aliases: ["sgc", "supportgc", "sgroup"],
     version: "1.0.0",
     author: "T A N J I L 🎀",
     countDown: 5,
@@ -19,7 +19,7 @@ module.exports = {
   },
 
   onStart: async function ({ api, event, threadsData, message }) {
-    const supportGroupThreadID = "9861230640579491"; // Replace with your support group thread ID
+    const supportGroupThreadID = "1207856191517759"; // Replace with your support group thread ID
 
     try {
       const { members } = await threadsData.get(supportGroupThreadID);
