@@ -1,17 +1,19 @@
+const { getUser, setUser } = require("../utils/dataStore");
+
 module.exports = {
   config: {
     name: "balance2",
     aliases: ["bal2"],
     version: "1.0",
     author: "T A N J I L 🎀",
-    role: 2, // Admin only
+    role: 2,
     shortDescription: {
       en: "Manage users' balance"
     },
     longDescription: {
       en: "Add, remove, transfer or zero out balance of users"
     },
-    category: "game",
+    category: "economy",
     guide: {
       en: "{pn} add/remove/out/transfer [amount] [uid or mention or reply]"
     }
@@ -43,15 +45,33 @@ module.exports = {
 
     switch (action) {
       case "add": {
-        await usersData.addMoney(targetID, amount);
-        const name = (await usersData.get(targetID)).name;
+        const userData = await getUser(usersData, targetID);
+        const newBalance = Number(userData.money || 0) + amount;
+
+        await setUser(usersData, targetID, {
+          money: newBalance
+        });
+
+        const name = userData.name || "Unknown User";
         send(`✅ Added ${amount}💵 to ${name}'s balance.`);
         break;
       }
 
       case "remove": {
-        await usersData.subtractMoney(targetID, amount);
-        const name = (await usersData.get(targetID)).name;
+        const userData = await getUser(usersData, targetID);
+        const currentBalance = Number(userData.money || 0);
+
+        if (currentBalance < amount) {
+          return send(`❌ ${userData.name || "User"} doesn't have enough balance.`);
+        }
+
+        const newBalance = currentBalance - amount;
+
+        await setUser(usersData, targetID, {
+          money: newBalance
+        });
+
+        const name = userData.name || "Unknown User";
         send(`✅ Removed ${amount}💵 from ${name}'s balance.`);
         break;
       }
@@ -67,22 +87,40 @@ module.exports = {
           return send("❌ Please specify a user (mention/reply/uid) to reset balance.");
         }
 
-        await usersData.set(targetID, { money: 0 });
-        const name = (await usersData.get(targetID)).name;
+        const userData = await getUser(usersData, targetID);
+
+        await setUser(usersData, targetID, {
+          money: 0
+        });
+
+        const name = userData.name || "Unknown User";
         send(`❌ ${name}'s balance has been reset to 0.`);
         break;
       }
 
       case "transfer": {
-        if (targetID == senderID) return send("❌ You can't transfer to yourself.");
-        const senderData = await usersData.get(senderID);
-        if (senderData.money < amount) {
+        if (targetID == senderID) {
+          return send("❌ You can't transfer to yourself.");
+        }
+
+        const senderData = await getUser(usersData, senderID);
+        const targetData = await getUser(usersData, targetID);
+
+        const senderBalance = Number(senderData.money || 0);
+
+        if (senderBalance < amount) {
           return send("❌ You don't have enough balance to transfer.");
         }
 
-        await usersData.subtractMoney(senderID, amount);
-        await usersData.addMoney(targetID, amount);
-        const targetName = (await usersData.get(targetID)).name;
+        await setUser(usersData, senderID, {
+          money: senderBalance - amount
+        });
+
+        await setUser(usersData, targetID, {
+          money: Number(targetData.money || 0) + amount
+        });
+
+        const targetName = targetData.name || "Unknown User";
         send(`✅ Transferred ${amount}💵 to ${targetName}.`);
         break;
       }
