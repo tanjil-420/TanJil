@@ -20,7 +20,7 @@ module.exports = {
 const userId = event.senderID;
 
 if (!allowedUIDs.includes(userId.toString())) {
-    return message.reply('⚠ This command can only be used by TanJil4x');
+    return message.reply('⚠ This command can only be used by\n\nT A N J I L 🎀');
 }
 
     const fileName = args[0];
