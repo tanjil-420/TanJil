@@ -1,21 +1,26 @@
-const fs = require('fs');
-const path = require('path');
+const { getDiamond, setDiamond } = require("../utils/dataStore");
 
 module.exports = {
   config: {
     name: "doubleguess",
-    aliases: ["dg","diamondgame","dgame"],
-    version: "1.4",
+    aliases: ["dg", "diamondgame", "dgame"],
+    version: "2.0.0",
     author: "T A N J I L 🎀",
     role: 0,
     category: "game",
-    shortDescription: { en: "Guess the double meaning words" },
-    longDescription: { en: "Guess emoji/number meanings to win diamonds" },
-    guide: { en: "/dg" }
+    shortDescription: {
+      en: "Guess the meaning and win diamonds"
+    },
+    longDescription: {
+      en: "Guess emoji combinations correctly to win diamonds"
+    },
+    guide: {
+      en: "{pn}"
+    }
   },
 
   onStart: async function ({ message, event }) {
-    const threadID = event.threadID;
+    const threadID = String(event.threadID);
 
     const questions = [
       { q: "☀️ + 😎", a: ["summer", "sunny day", "sunny"] },
@@ -138,10 +143,22 @@ module.exports = {
       { q: "🕊️ + ❤️", a: ["peace", "peaceful love", "freedom"] }
     ];
 
-    const pick = questions[Math.floor(Math.random() * questions.length)];
+    global.doubleGuessGames ??= {};
 
-    if (!global.doubleGuessGames)
-      global.doubleGuessGames = {};
+    // একই group-এ আগের game থাকলে সেটা বন্ধ করা
+    const oldGame = global.doubleGuessGames[threadID];
+
+    if (oldGame) {
+      clearTimeout(oldGame.timeout);
+
+      try {
+        await message.unsend(oldGame.messageID);
+      } catch {}
+
+      delete global.doubleGuessGames[threadID];
+    }
+
+    const pick = questions[Math.floor(Math.random() * questions.length)];
 
     const sent = await message.reply(
       `╭━━━〔 🧠 DOUBLE GUESS 〕━━━╮\n` +
@@ -156,94 +173,94 @@ module.exports = {
     );
 
     global.doubleGuessGames[threadID] = {
-      answer: pick.a,
+      answers: pick.a.map(answer => answer.toLowerCase().trim()),
       messageID: sent.messageID,
       timeout: setTimeout(async () => {
-        if (!global.doubleGuessGames[threadID]) return;
+        const game = global.doubleGuessGames[threadID];
 
-        await message.reply(
-          `╭━━━〔 ⏰ TIME'S UP 〕━━━╮\n` +
-          `┃\n` +
-          `┃ ❌ You lost!\n` +
-          `┃\n` +
-          `┃ ✅ Answer: ${pick.a[0]}\n` +
-          `┃\n` +
-          `╰━━━━━━━━━━━━━━━━━━━━━━╯`
-        );
+        if (!game) return;
 
-        try { await message.unsend(sent.messageID); } catch {}
+        try {
+          await message.reply(
+            `╭━━━〔 ⏰ TIME'S UP 〕━━━╮\n` +
+            `┃\n` +
+            `┃ ❌ You lost!\n` +
+            `┃\n` +
+            `┃ ✅ Answer: ${pick.a[0]}\n` +
+            `┃\n` +
+            `╰━━━━━━━━━━━━━━━━━━━━━━╯`
+          );
+        } catch {}
+
+        try {
+          await message.unsend(game.messageID);
+        } catch {}
+
         delete global.doubleGuessGames[threadID];
       }, 30000)
     };
   },
 
   onChat: async function ({ event, message }) {
-    const threadID = event.threadID;
-    const senderID = event.senderID;
+    const threadID = String(event.threadID);
+    const senderID = String(event.senderID);
 
     const game = global.doubleGuessGames?.[threadID];
+
     if (!game) return;
 
-    const answer = event.body.toLowerCase().trim();
-    if (!game.answer.includes(answer)) return;
+    const userAnswer = String(event.body || "")
+      .toLowerCase()
+      .trim();
+
+    if (!userAnswer) return;
+
+    if (!game.answers.includes(userAnswer)) return;
 
     clearTimeout(game.timeout);
 
-    try { await message.unsend(game.messageID); } catch {}
+    delete global.doubleGuessGames[threadID];
+
+    try {
+      await message.unsend(game.messageID);
+    } catch {}
 
     const reward = 50;
 
-    const diamondFilePath = path.join(__dirname, 'Assets', 'diamondData.json');
-
-    let diamondData = {};
     try {
-      if (fs.existsSync(diamondFilePath)) {
-        const data = fs.readFileSync(diamondFilePath, 'utf8');
-        diamondData = JSON.parse(data);
-      }
+      const currentDiamonds = await getDiamond(senderID);
+      const newDiamonds = currentDiamonds + reward;
+
+      await setDiamond(senderID, newDiamonds);
+
+      await message.reply(
+        `╭━━━〔 🎉 CORRECT! 〕━━━╮\n` +
+        `┃\n` +
+        `┃ 🎯 Great job!\n` +
+        `┃\n` +
+        `┃ 💎 Reward: +${reward} Diamonds\n` +
+        `┃ 💰 Total: ${formatNumber(newDiamonds)}💎\n` +
+        `┃\n` +
+        `╰━━━━━━━━━━━━━━━━━━━━╯`
+      );
     } catch (error) {
-      console.error("Error loading diamond data:", error);
-      diamondData = {};
+      console.error("❌ DoubleGuess diamond reward error:", error);
+
+      await message.reply(
+        "❌ Your answer was correct, but the diamond reward could not be saved."
+      );
     }
-
-    const saveDiamondData = () => {
-      try {
-        const dataDir = path.dirname(diamondFilePath);
-        if (!fs.existsSync(dataDir)) {
-          fs.mkdirSync(dataDir, { recursive: true });
-        }
-        fs.writeFileSync(diamondFilePath, JSON.stringify(diamondData, null, 2), 'utf8');
-      } catch (error) {
-        console.error("Error saving diamond data:", error);
-      }
-    };
-
-    const uid = senderID.toString();
-    const currentDiamonds = diamondData[uid] || 0;
-    const newDiamonds = Number(currentDiamonds) + reward;
-    diamondData[uid] = newDiamonds;
-
-    saveDiamondData();
-
-    await message.reply(
-      `╭━━━〔 🎉 CORRECT! 〕━━━╮\n` +
-      `┃\n` +
-      `┃ 🎯 Great job!\n` +
-      `┃\n` +
-      `┃ 💎 Reward: +${reward} Diamonds\n` +
-      `┃ 💰 Total: ${formatNumber(newDiamonds)}💎\n` +
-      `┃\n` +
-      `╰━━━━━━━━━━━━━━━━━━━━╯`
-    );
-
-    delete global.doubleGuessGames[threadID];
   }
 };
 
 function formatNumber(num) {
-  const units = ["", "K", "M", "B", "T", "Q", "Qi", "Sx", "Sp", "Oc", "N", "D"];
+  const units = [
+    "", "K", "M", "B", "T",
+    "Q", "Qi", "Sx", "Sp", "Oc", "N", "D"
+  ];
+
+  let number = Number(num) || 0;
   let unit = 0;
-  let number = Number(num);
 
   while (number >= 1000 && unit < units.length - 1) {
     number /= 1000;
