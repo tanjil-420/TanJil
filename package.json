@@ -8,7 +8,7 @@
     "npm": ">=9.0.0"
   },
   "dependencies": {
-    "@dongdev/fca-unofficial": "^4.0.3",
+    "@dongdev/fca-unofficial": "^3.0.29",
     "axios": "^1.4.0",
     "axios-cookiejar-support": "^5.0.5",
     "bcrypt": "^5.0.1",
