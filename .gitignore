@@ -1,7 +1,3 @@
-account.txt
-*.bak
-node_modules/
-
 node_modules
 fb-chat-api.dev
 obfcode.js
