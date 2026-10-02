@@ -76,7 +76,7 @@
     ]
   },
   "database": {
-    "type": "mongodb",
+    "type": "sqlite",
     "uriMongodb": "mongodb+srv://tanjil4x:tanjil4x@cluster0.idjt3ol.mongodb.net/?appName=Cluster0",
     "autoSyncWhenStart": false,
     "autoRefreshThreadInfoFirstTime": true,
